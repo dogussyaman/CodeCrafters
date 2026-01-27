@@ -1,0 +1,153 @@
+export type UserRole = "developer" | "hr" | "admin"
+
+export type JobType = "full-time" | "part-time" | "contract" | "internship" | "freelance"
+
+export type ExperienceLevel = "junior" | "mid" | "senior" | "lead"
+
+export type SkillCategory = "programming" | "framework" | "tool" | "soft-skill" | "language"
+
+export type ProficiencyLevel = "basic" | "intermediate" | "advanced" | "expert"
+
+export type JobStatus = "active" | "closed" | "draft"
+
+export type CVStatus = "pending" | "processed" | "failed"
+
+export type MatchStatus = "suggested" | "viewed" | "contacted" | "rejected" | "hired"
+
+export type ApplicationStatus = "pending" | "reviewed" | "interview" | "rejected" | "accepted"
+
+export type ContentStatus = "draft" | "published" | "archived"
+
+
+export interface Profile {
+  id: string
+  email: string
+  full_name: string
+  phone?: string
+  role: UserRole
+  created_at: string
+  updated_at: string
+}
+
+export interface Company {
+  id: string
+  name: string
+  description?: string
+  industry?: string
+  website?: string
+  logo_url?: string
+  location?: string
+  employee_count?: string
+  created_by: string
+  created_at: string
+  updated_at: string
+}
+
+export interface JobPosting {
+  id: string
+  company_id: string
+  title: string
+  description: string
+  requirements: string
+  responsibilities?: string
+  location?: string
+  job_type?: JobType
+  experience_level?: ExperienceLevel
+  salary_min?: number
+  salary_max?: number
+  status: JobStatus
+  created_by: string
+  created_at: string
+  updated_at: string
+}
+
+export interface Skill {
+  id: string
+  name: string
+  category?: SkillCategory
+  created_at: string
+}
+
+export interface CV {
+  id: string
+  developer_id: string
+  file_url: string
+  file_name: string
+  parsed_data?: any
+  status: CVStatus
+  created_at: string
+  updated_at: string
+}
+
+export interface CoverLetter {
+  id: string
+  developer_id: string
+  title: string
+  content: string
+  is_favorite?: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface Match {
+  id: string
+  job_id: string
+  developer_id: string
+  match_score: number
+  matching_skills?: any
+  missing_skills?: any
+  status: MatchStatus
+  created_at: string
+  updated_at: string
+}
+
+export interface Application {
+  id: string
+  job_id: string
+  developer_id: string
+  cv_id?: string
+  cover_letter?: string
+  status: ApplicationStatus
+  created_at: string
+  updated_at: string
+}
+
+export interface Project {
+  id: string
+  title: string
+  description: string
+  long_description?: string
+  technologies: string[]
+  github_url?: string
+  demo_url?: string
+  image_url?: string
+  stars: number
+  views: number
+  category?: string
+  created_by?: string
+  status: ContentStatus
+  created_at: string
+  updated_at: string
+}
+
+
+export interface ProjectLike {
+  id: string
+  project_id: string
+  user_id: string
+  created_at: string
+}
+
+
+export interface Notification {
+  id: string
+  recipient_id: string
+  actor_id: string | null
+  type: 'new_application' | 'application_status_changed' | 'new_match' | 'cv_processed' | 'cv_failed' | 'new_contact_message' | 'system'
+  title: string
+  body: string | null
+  href: string | null
+  data: Record<string, any>
+  read_at: string | null
+  created_at: string
+}

@@ -1,0 +1,147 @@
+export default function KVKKPage() {
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-32 max-w-4xl">
+        <h1 className="text-4xl font-bold mb-8 gradient-text">KVKK Aydınlatma Metni</h1>
+
+        <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6">
+          <section>
+            <h2 className="text-2xl font-bold mb-4">1. Veri Sorumlusu</h2>
+            <p className="text-muted-foreground">
+              6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, kişisel verileriniz; veri sorumlusu
+              sıfatıyla Codecrafters tarafından aşağıda açıklanan kapsamda işlenebilecektir.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold mb-4">2. İşlenen Kişisel Veriler</h2>
+            <p className="text-muted-foreground mb-3">Platformumuzda işlenen kişisel veri kategorileri:</p>
+            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
+              <li>
+                <strong>Kimlik Bilgileri:</strong> Ad, soyad, T.C. kimlik numarası (isteğe bağlı)
+              </li>
+              <li>
+                <strong>İletişim Bilgileri:</strong> E-posta adresi, telefon numarası, adres
+              </li>
+              <li>
+                <strong>Özlük Bilgileri:</strong> Eğitim durumu, iş deneyimi, sertifikalar
+              </li>
+              <li>
+                <strong>Mesleki Deneyim:</strong> CV içeriği, yetenekler, projeler
+              </li>
+              <li>
+                <strong>İşlem Güvenliği Bilgileri:</strong> IP adresi, çerez kayıtları, log kayıtları
+              </li>
+              <li>
+                <strong>Görsel ve İşitsel Kayıtlar:</strong> Profil fotoğrafı (isteğe bağlı)
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold mb-4">3. Kişisel Verilerin İşlenme Amaçları</h2>
+            <p className="text-muted-foreground mb-3">Kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:</p>
+            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
+              <li>Platformda üyelik ve kullanıcı hesabı oluşturulması</li>
+              <li>İş ilanları ile geliştiricilerin eşleştirilmesi hizmetinin sunulması</li>
+              <li>CV analizi ve yetenek değerlendirmesi yapılması</li>
+              <li>Şirketler ile iş arayanların buluşturulması</li>
+              <li>Platform hizmetlerinin geliştirilmesi ve iyileştirilmesi</li>
+              <li>Kullanıcı destek hizmetlerinin sağlanması</li>
+              <li>İstatistiksel analiz ve raporlama</li>
+              <li>Yasal yükümlülüklerin yerine getirilmesi</li>
+              <li>Platform güvenliğinin sağlanması</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold mb-4">4. Kişisel Verilerin Aktarılması</h2>
+            <p className="text-muted-foreground mb-3">
+              Kişisel verileriniz, yukarıda belirtilen amaçların gerçekleştirilmesi doğrultusunda:
+            </p>
+            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
+              <li>İş başvurusu yaptığınız veya eşleştiğiniz şirketlerle (açık rızanız ile)</li>
+              <li>Hizmet sağlayıcılarımız ile (veri işleme, bulut hizmetleri, analitik)</li>
+              <li>Yasal yükümlülükler çerçevesinde yetkili kamu kurum ve kuruluşlarıyla</li>
+            </ul>
+            <p className="text-muted-foreground mt-3">paylaşılabilmektedir.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold mb-4">5. Kişisel Verilerin Toplanma Yöntemi</h2>
+            <p className="text-muted-foreground">
+              Kişisel verileriniz, platform üzerinden kayıt formları, CV yükleme, profil güncelleme ve iletişim formları
+              aracılığıyla otomatik veya otomatik olmayan yöntemlerle toplanmaktadır.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold mb-4">6. Kişisel Verilerin Saklanma Süresi</h2>
+            <p className="text-muted-foreground">
+              Kişisel verileriniz, işleme amacının gerektirdiği süre boyunca veya ilgili mevzuatta öngörülen süreler
+              boyunca saklanmaktadır. Bu süre sona erdiğinde verileriniz silinir, yok edilir veya anonim hale getirilir.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold mb-4">7. KVKK Kapsamındaki Haklarınız</h2>
+            <p className="text-muted-foreground mb-3">KVKK'nın 11. maddesi uyarınca, şu haklara sahipsiniz:</p>
+            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
+              <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
+              <li>İşlenmişse buna ilişkin bilgi talep etme</li>
+              <li>İşlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme</li>
+              <li>Yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme</li>
+              <li>Eksik veya yanlış işlenmiş olması halinde düzeltilmesini isteme</li>
+              <li>KVKK'nın 7. maddesinde öngörülen şartlar çerçevesinde silinmesini veya yok edilmesini isteme</li>
+              <li>
+                Yapılan düzeltme, silme ve yok etme işlemlerinin kişisel verilerin aktarıldığı üçüncü kişilere
+                bildirilmesini isteme
+              </li>
+              <li>
+                İşlenen verilerin münhasıran otomatik sistemler ile analiz edilmesi nedeniyle aleyhinize bir sonucun
+                ortaya çıkmasına itiraz etme
+              </li>
+              <li>
+                Kanuna aykırı olarak işlenmesi sebebiyle zarara uğramanız halinde zararın giderilmesini talep etme
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold mb-4">8. Başvuru Yöntemi</h2>
+            <p className="text-muted-foreground">
+              Yukarıda belirtilen haklarınızı kullanmak için kimliğinizi tespit edici bilgiler ile talebinizi içeren
+              başvurunuzu{" "}
+              <a href="/iletisim" className="text-primary hover:underline">
+                iletişim sayfamızdan
+              </a>{" "}
+              veya hello@codecrafters.com adresine e-posta ile iletebilirsiniz.
+            </p>
+            <p className="text-muted-foreground mt-3">
+              Başvurularınız, talebin niteliğine göre en kısa sürede ve en geç 30 (otuz) gün içinde ücretsiz olarak
+              sonuçlandırılacaktır. İşlemin ayrıca bir maliyeti gerektirmesi halinde, Kişisel Verileri Koruma Kurulu
+              tarafından belirlenen tarifedeki ücret alınabilir.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold mb-4">9. İletişim</h2>
+            <p className="text-muted-foreground">
+              KVKK hakkında detaylı bilgi ve sorularınız için bizimle iletişime geçebilirsiniz:
+            </p>
+            <div className="bg-muted/50 p-4 rounded-lg mt-3">
+              <p className="text-muted-foreground">
+                <strong>E-posta:</strong> kvkk@codecrafters.com
+              </p>
+              <p className="text-muted-foreground">
+                <strong>Adres:</strong> 123 İnovasyon Caddesi, Teknoloji Şehri, TC 12345
+              </p>
+            </div>
+          </section>
+
+          <p className="text-sm text-muted-foreground mt-8 pt-8 border-t">Son güncellenme: 13 Ocak 2025</p>
+        </div>
+      </div>
+    </div>
+  )
+}
