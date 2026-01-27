@@ -62,20 +62,61 @@ export default function UploadCVPage() {
       // Dosya adını oluştur (benzersiz)
       const fileExt = file.name.split(".").pop()
       const fileName = `${user.id}/${Date.now()}.${fileExt}`
+      // NOT: filePath'te bucket adı (cvs) olmamalı, Supabase otomatik ekliyor
+      const filePath = fileName
 
-      // NOT: Blob storage henüz yapılandırılmamış olabilir
-      // Bu durumda file_url'yi geçici olarak file.name olarak kaydediyoruz
-      // Gerçek production'da Vercel Blob veya Supabase Storage kullanılmalı
+      // Supabase Storage'a yükle
+      const { error: uploadError } = await supabase.storage
+        .from("cvs")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false,
+        })
+
+      if (uploadError) {
+        // Eğer bucket yoksa kullanıcıya bilgi ver
+        if (uploadError.message.includes("Bucket not found")) {
+          throw new Error(
+            "CV storage bucket'ı henüz oluşturulmamış. Lütfen Supabase dashboard'dan 'cvs' bucket'ını oluşturun."
+          )
+        }
+        throw uploadError
+      }
+
+      // Public URL al (veya signed URL - güvenlik için)
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("cvs").getPublicUrl(filePath)
 
       // CV kaydını veritabanına ekle
-      const { error: dbError } = await supabase.from("cvs").insert({
-        developer_id: user.id,
-        file_url: `/uploads/${fileName}`, // Geçici URL
-        file_name: file.name,
-        status: "pending",
-      })
+      const { data: cvData, error: dbError } = await supabase
+        .from("cvs")
+        .insert({
+          developer_id: user.id,
+          file_url: publicUrl,
+          file_name: file.name,
+          status: "pending",
+        })
+        .select()
+        .single()
 
       if (dbError) throw dbError
+
+      // Edge Function'ı tetikle (CV processing için)
+      // Not: Edge Function henüz oluşturulmadıysa bu adım atlanır
+      try {
+        const { error: functionError } = await supabase.functions.invoke("cv-process", {
+          body: { cv_id: cvData.id },
+        })
+
+        if (functionError) {
+          console.warn("Edge Function tetiklenemedi:", functionError)
+          // Hata olsa bile devam et, CV kaydedildi
+        }
+      } catch (functionErr) {
+        console.warn("Edge Function çağrısı başarısız:", functionErr)
+        // Hata olsa bile devam et
+      }
 
       router.push("/dashboard/gelistirici/cv")
     } catch (err) {

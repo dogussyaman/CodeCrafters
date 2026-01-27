@@ -147,12 +147,16 @@ export function JobApplyModal({ jobId, jobTitle, isOpen, onClose }: JobApplyModa
                 return
             }
 
-            const { error } = await supabase.from("applications").insert({
-                job_id: jobId,
-                developer_id: user.id,
-                cv_id: selectedCvId,
-                cover_letter: coverLetter || null,
-            })
+            const { data: applicationData, error } = await supabase
+                .from("applications")
+                .insert({
+                    job_id: jobId,
+                    developer_id: user.id,
+                    cv_id: selectedCvId,
+                    cover_letter: coverLetter || null,
+                })
+                .select()
+                .single()
 
             if (error) {
                 if (error.code === "23505") {
@@ -161,6 +165,23 @@ export function JobApplyModal({ jobId, jobTitle, isOpen, onClose }: JobApplyModa
                     throw error
                 }
                 return
+            }
+
+            // Application match Edge Function'ını tetikle
+            if (applicationData?.id) {
+                try {
+                    const { error: matchError } = await supabase.functions.invoke("application-match", {
+                        body: { application_id: applicationData.id },
+                    })
+
+                    if (matchError) {
+                        console.warn("Match calculation failed:", matchError)
+                        // Hata olsa bile devam et, başvuru kaydedildi
+                    }
+                } catch (matchErr) {
+                    console.warn("Match function call failed:", matchErr)
+                    // Hata olsa bile devam et
+                }
             }
 
             toast.success("Başvurunuz alındı!", {

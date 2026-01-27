@@ -74,7 +74,20 @@ export interface CV {
   file_url: string
   file_name: string
   parsed_data?: any
+  raw_text?: string
   status: CVStatus
+  created_at: string
+  updated_at: string
+}
+
+export interface CVProfile {
+  id: string
+  cv_id: string
+  skills: string[]
+  experience_years?: number
+  roles: string[]
+  seniority?: 'junior' | 'mid' | 'senior'
+  summary?: string
   created_at: string
   updated_at: string
 }
@@ -107,6 +120,8 @@ export interface Application {
   developer_id: string
   cv_id?: string
   cover_letter?: string
+  match_score?: number
+  match_reason?: string
   status: ApplicationStatus
   created_at: string
   updated_at: string
