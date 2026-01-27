@@ -1,7 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Building2, Plus } from "lucide-react"
-import Link from "next/link"
+import { Building2 } from "lucide-react"
 
 interface HrCompanyCalloutProps {
     companyCount: number | null
@@ -15,18 +13,18 @@ export function HrCompanyCallout({ companyCount }: HrCompanyCalloutProps) {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Building2 className="size-5" />
-                    Şirket Ekleyin
+          Şirket Ataması Gerekli
                 </CardTitle>
-                <CardDescription>İş ilanı yayınlamak için önce şirket bilgilerini eklemeniz gerekiyor</CardDescription>
+        <CardDescription>
+          İş ilanı yayınlayabilmeniz için profilinizin bir şirkete atanmış olması gerekiyor. Lütfen sistem yöneticinizle veya
+          şirket yetkilinizle iletişime geçin.
+        </CardDescription>
             </CardHeader>
-            <CardContent>
-                <Button asChild>
-                    <Link href="/dashboard/ik/sirketler/olustur">
-                        <Plus className="mr-2 size-4" />
-                        Şirket Ekle
-                    </Link>
-                </Button>
-            </CardContent>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">
+          Şirket atamanız yapıldıktan sonra ilanlarınız otomatik olarak bu şirkete bağlı olacaktır.
+        </p>
+      </CardContent>
         </Card>
     )
 }

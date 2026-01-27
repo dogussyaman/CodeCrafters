@@ -1,0 +1,885 @@
+{
+  "info": {
+    "_postman_id": "codecrafters-supabase-complete-collection",
+    "name": "Codecrafters Supabase - COMPLETE REST & RPC",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup (email + password)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"StrongPass123!\",\n  \"data\": {\n    \"full_name\": \"Test User\",\n    \"role\": \"developer\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/signup",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "signup"]
+            }
+          }
+        },
+        {
+          "name": "Login (password grant)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"StrongPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/token?grant_type=password",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "token"],
+              "query": [{ "key": "grant_type", "value": "password" }]
+            }
+          }
+        },
+        {
+          "name": "Get user (from access_token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/user",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "user"]
+            }
+          }
+        },
+        {
+          "name": "Logout (invalidate refresh_token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{REFRESH_TOKEN}}\"\n}"
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/logout",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Reset password (magic link)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"redirect_to\": \"{{PASSWORD_RESET_REDIRECT_URL}}\"\n}"
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/recover",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "recover"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "REST - Tables",
+      "item": [
+        {
+          "name": "profiles",
+          "item": [
+            {
+              "name": "List profiles",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/profiles?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "profiles"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            },
+            {
+              "name": "Get profile by id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/profiles?id=eq.{{profile_id}}&select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "profiles"],
+                  "query": [
+                    { "key": "id", "value": "eq.{{profile_id}}" },
+                    { "key": "select", "value": "*" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create profile (admin)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" },
+                  { "key": "Prefer", "value": "return=representation", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"{{profile_id}}\",\n  \"email\": \"dev@example.com\",\n  \"full_name\": \"Developer User\",\n  \"role\": \"developer\"\n}"
+                },
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/profiles",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "profiles"]
+                }
+              }
+            },
+            {
+              "name": "Update profile (self)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" },
+                  { "key": "Prefer", "value": "return=representation", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"full_name\": \"Updated Name\",\n  \"title\": \"Senior Developer\",\n  \"bio\": \"Kısa bio\"\n}"
+                },
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/profiles?id=eq.{{profile_id}}",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "profiles"],
+                  "query": [{ "key": "id", "value": "eq.{{profile_id}}" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "companies",
+          "item": [
+            {
+              "name": "List companies",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/companies?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "companies"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            },
+            {
+              "name": "Get company by id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/companies?id=eq.{{company_id}}&select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "companies"],
+                  "query": [
+                    { "key": "id", "value": "eq.{{company_id}}" },
+                    { "key": "select", "value": "*" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create company (admin or owner)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" },
+                  { "key": "Prefer", "value": "return=representation", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Test Company\",\n  \"description\": \"Test description\",\n  \"industry\": \"SaaS\",\n  \"website\": \"https://example.com\",\n  \"location\": \"İstanbul\",\n  \"created_by\": \"{{profile_id}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/companies",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "companies"]
+                }
+              }
+            },
+            {
+              "name": "Update company",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" },
+                  { "key": "Prefer", "value": "return=representation", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Updated description\",\n  \"location\": \"Ankara\"\n}"
+                },
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/companies?id=eq.{{company_id}}",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "companies"],
+                  "query": [{ "key": "id", "value": "eq.{{company_id}}" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "company_members",
+          "item": [
+            {
+              "name": "List company_members",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/company_members?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "company_members"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            },
+            {
+              "name": "Create company_member",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" },
+                  { "key": "Prefer", "value": "return=representation", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"company_id\": \"{{company_id}}\",\n  \"full_name\": \"HR Member\",\n  \"email\": \"hr@example.com\",\n  \"title\": \"HR Manager\"\n}"
+                },
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/company_members",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "company_members"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "job_postings",
+          "item": [
+            {
+              "name": "List job_postings",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/job_postings?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "job_postings"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            },
+            {
+              "name": "Create job_posting",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" },
+                  { "key": "Prefer", "value": "return=representation", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"company_id\": \"{{company_id}}\",\n  \"title\": \"Senior Full Stack Developer\",\n  \"description\": \"Pozisyon açıklaması\",\n  \"requirements\": \"Gereksinimler\",\n  \"status\": \"draft\",\n  \"job_type\": \"full-time\",\n  \"experience_level\": \"senior\",\n  \"created_by\": \"{{profile_id}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/job_postings",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "job_postings"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "skills",
+          "item": [
+            {
+              "name": "List skills",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/skills?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "skills"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "developer_skills",
+          "item": [
+            {
+              "name": "List developer_skills",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/developer_skills?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "developer_skills"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "cvs",
+          "item": [
+            {
+              "name": "List cvs (own)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/cvs?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "cvs"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "cover_letters",
+          "item": [
+            {
+              "name": "List cover_letters (own)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/cover_letters?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "cover_letters"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "experiences",
+          "item": [
+            {
+              "name": "List experiences",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/experiences?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "experiences"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "educations",
+          "item": [
+            {
+              "name": "List educations",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/educations?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "educations"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "certificates",
+          "item": [
+            {
+              "name": "List certificates",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/certificates?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "certificates"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "matches",
+          "item": [
+            {
+              "name": "List matches",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/matches?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "matches"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "applications",
+          "item": [
+            {
+              "name": "List applications",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/applications?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "applications"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "application_assignments",
+          "item": [
+            {
+              "name": "List application_assignments",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/application_assignments?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "application_assignments"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "application_status_history",
+          "item": [
+            {
+              "name": "List application_status_history",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/application_status_history?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "application_status_history"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "application_notes",
+          "item": [
+            {
+              "name": "List application_notes",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/application_notes?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "application_notes"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "interviews",
+          "item": [
+            {
+              "name": "List interviews",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/interviews?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "interviews"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "notifications",
+          "item": [
+            {
+              "name": "List notifications (own)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/notifications?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "notifications"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "projects",
+          "item": [
+            {
+              "name": "List projects",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/projects?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "projects"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "email_queue",
+          "item": [
+            {
+              "name": "List email_queue (admin only)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/email_queue?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "email_queue"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "project_likes",
+          "item": [
+            {
+              "name": "List project_likes",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/project_likes?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "project_likes"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "contact_messages",
+          "item": [
+            {
+              "name": "Create contact_message",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" },
+                  { "key": "Content-Type", "value": "application/json", "type": "text" },
+                  { "key": "Prefer", "value": "return=representation", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"subject\": \"Destek talebi\",\n  \"message\": \"Mesaj içeriği\"\n}"
+                },
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/contact_messages",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "contact_messages"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "training_requests",
+          "item": [
+            {
+              "name": "List training_requests (own/admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/training_requests?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "training_requests"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "role_requests",
+          "item": [
+            {
+              "name": "List role_requests (own/admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/role_requests?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "role_requests"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "company_requests",
+          "item": [
+            {
+              "name": "List company_requests (own/admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/company_requests?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "company_requests"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "platform_stats",
+          "item": [
+            {
+              "name": "List platform_stats",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "apikey", "value": "{{SUPABASE_ANON_KEY}}", "type": "text" },
+                  { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "{{SUPABASE_URL}}/rest/v1/platform_stats?select=*",
+                  "host": ["{{SUPABASE_URL}}"],
+                  "path": ["rest", "v1", "platform_stats"],
+                  "query": [{ "key": "select", "value": "*" }]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RPC - Functions",
+      "item": [
+        {
+          "name": "create_company_with_owner (admin backend)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+              { "key": "Authorization", "value": "Bearer {{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_name\": \"Test Company\",\n  \"company_email\": \"owner@example.com\",\n  \"owner_full_name\": \"Owner User\",\n  \"owner_user_id\": \"{{owner_user_id}}\",\n  \"temp_password\": \"TempPass123!\",\n  \"created_by_admin_id\": \"{{admin_profile_id}}\",\n  \"company_description\": \"Açıklama\",\n  \"company_industry\": \"SaaS\",\n  \"company_website\": \"https://example.com\",\n  \"company_location\": \"İstanbul\"\n}"
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/rest/v1/rpc/create_company_with_owner",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["rest", "v1", "rpc", "create_company_with_owner"]
+            }
+          }
+        },
+        {
+          "name": "create_hr_user (admin/company_owner backend)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey", "value": "{{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+              { "key": "Authorization", "value": "Bearer {{SUPABASE_SERVICE_ROLE_KEY}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hr_email\": \"hr@example.com\",\n  \"hr_full_name\": \"HR User\",\n  \"hr_user_id\": \"{{hr_user_id}}\",\n  \"temp_password\": \"TempPass123!\",\n  \"company_id_param\": \"{{company_id}}\",\n  \"created_by_user_id\": \"{{creator_profile_id}}\",\n  \"hr_title\": \"HR Manager\",\n  \"hr_phone\": \"+90 555 000 0000\"\n}"
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/rest/v1/rpc/create_hr_user",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["rest", "v1", "rpc", "create_hr_user"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "SUPABASE_URL", "value": "https://aferpfwiqgjuxbcuogxq.supabase.co" },
+    { "key": "SUPABASE_ANON_KEY", "value": "" },
+    { "key": "SUPABASE_SERVICE_ROLE_KEY", "value": "" },
+    { "key": "ACCESS_TOKEN", "value": "" },
+    { "key": "profile_id", "value": "" },
+    { "key": "company_id", "value": "" },
+    { "key": "owner_user_id", "value": "" },
+    { "key": "admin_profile_id", "value": "" },
+    { "key": "hr_user_id", "value": "" },
+    { "key": "creator_profile_id", "value": "" }
+  ]
+}

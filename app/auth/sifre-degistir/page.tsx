@@ -1,6 +1,6 @@
  "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,7 +13,7 @@ import { AuthSplitLayout } from "@/components/auth-split-layout"
 import { resetPasswordSchema, type ResetPasswordFormValues } from "@/lib/validations"
 import { CheckCircle2, AlertCircle } from "lucide-react"
 
-export default function FirstLoginChangePasswordPage() {
+export function FirstLoginChangePasswordPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -234,3 +234,10 @@ export default function FirstLoginChangePasswordPage() {
   )
 }
 
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Yükleniyor...</div>}>
+      <FirstLoginChangePasswordPage />
+    </Suspense>
+  )
+}

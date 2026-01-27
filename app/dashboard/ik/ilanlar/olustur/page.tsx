@@ -15,7 +15,7 @@ import { AlertCircle } from "lucide-react"
 import Link from "next/link"
 
 export default function CreateJobPage() {
-  const [companies, setCompanies] = useState<any[]>([])
+  const [company, setCompany] = useState<any | null>(null)
   const [formData, setFormData] = useState({
     company_id: "",
     title: "",
@@ -30,19 +30,52 @@ export default function CreateJobPage() {
     status: "draft",
   })
   const [loading, setLoading] = useState(false)
+  const [loadingCompany, setLoadingCompany] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
-    const fetchCompanies = async () => {
+    const fetchCompanyForHR = async () => {
       const supabase = createClient()
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      const { data } = await supabase.from("companies").select("*").eq("created_by", user!.id)
-      setCompanies(data || [])
+
+      if (!user) {
+        setLoadingCompany(false)
+        setError("Kullanıcı bulunamadı")
+        return
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("company_id")
+        .eq("id", user.id)
+        .single()
+
+      if (!profile?.company_id) {
+        setLoadingCompany(false)
+        return
+      }
+
+      const { data: companyData } = await supabase
+        .from("companies")
+        .select("*")
+        .eq("id", profile.company_id)
+        .single()
+
+      if (companyData) {
+        setCompany(companyData)
+        setFormData((prev) => ({
+          ...prev,
+          company_id: profile.company_id,
+        }))
+      }
+
+      setLoadingCompany(false)
     }
-    fetchCompanies()
+
+    fetchCompanyForHR()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,18 +117,34 @@ export default function CreateJobPage() {
     }
   }
 
-  if (companies.length === 0) {
+  if (loadingCompany) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-2xl min-h-screen">
+        <Card>
+          <CardHeader>
+            <CardTitle>Yükleniyor</CardTitle>
+            <CardDescription>Şirket bilginiz yükleniyor...</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    )
+  }
+
+  if (!company) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-2xl min-h-screen">
         <Card className="border-destructive/50">
           <CardHeader>
-            <CardTitle>Şirket Gerekli</CardTitle>
-            <CardDescription>İş ilanı oluşturmak için önce bir şirket eklemeniz gerekiyor</CardDescription>
+            <CardTitle>Şirket Ataması Gerekli</CardTitle>
+            <CardDescription>
+              İş ilanı oluşturabilmek için profilinizin bir şirkete atanmış olması gerekiyor. Lütfen sistem yöneticinizle veya
+              şirket yetkilinizle iletişime geçin.
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild>
-              <Link href="/dashboard/ik/sirketler/olustur">Şirket Ekle</Link>
-            </Button>
+            <p className="text-sm text-muted-foreground">
+              Şirket atamanız yapıldıktan sonra bu ekrandan doğrudan kendi şirketiniz için ilan oluşturabilirsiniz.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -119,25 +168,15 @@ export default function CreateJobPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="company">
+                <Label>
                   Şirket <span className="text-destructive">*</span>
                 </Label>
-                <Select
-                  value={formData.company_id}
-                  onValueChange={(value) => setFormData({ ...formData, company_id: value })}
-                  required
-                >
-                  <SelectTrigger id="company">
-                    <SelectValue placeholder="Şirket seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {companies.map((company) => (
-                      <SelectItem key={company.id} value={company.id}>
-                        {company.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="px-3 py-2 rounded-md border bg-muted text-sm">
+                  {company?.name ?? "Şirket bilgisi bulunamadı"}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  İlanlarınız otomatik olarak bu şirkete bağlı oluşturulacaktır.
+                </p>
               </div>
 
               <div className="space-y-2 md:col-span-2">
