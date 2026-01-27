@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Building2, Briefcase, Users, Star, Home, ArrowLeft, ArrowRight, Bell } from "lucide-react"
+import { Home, Briefcase, Star, Users, Bell, Building2 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -9,37 +9,32 @@ import { useState } from "react"
 const menuItems = [
   {
     title: "Panel",
-    href: "/dashboard/ik",
+    href: "/dashboard/company",
     icon: Home,
   },
   {
-    title: "Şirket Bilgileri",
-    href: "/dashboard/ik/sirket",
-    icon: Building2,
+    title: "Çalışanlar",
+    href: "/dashboard/company/calisanlar",
+    icon: Users,
   },
   {
     title: "İş İlanları",
-    href: "/dashboard/ik/ilanlar",
+    href: "/dashboard/company/ilanlar",
     icon: Briefcase,
   },
   {
     title: "Eşleşmeler",
-    href: "/dashboard/ik/eslesmeler",
+    href: "/dashboard/company/eslesmeler",
     icon: Star,
   },
   {
-    title: "Başvurular",
-    href: "/dashboard/ik/basvurular",
-    icon: Users,
-  },
-  {
     title: "Bildirimler",
-    href: "/dashboard/ik/bildirimler",
+    href: "/dashboard/company/bildirimler",
     icon: Bell,
   },
 ]
 
-export function HRSidebar() {
+export function CompanySidebar() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
 
@@ -56,7 +51,11 @@ export function HRSidebar() {
             onClick={() => setOpen(!open)}
             className="absolute -top-2 -right-6 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors active:scale-95"
           >
-            {open ? <ArrowLeft className="size-3" /> : <ArrowRight className="size-3" />}
+            {open ? (
+              <span className="text-xs font-semibold">&lt;</span>
+            ) : (
+              <span className="text-xs font-semibold">&gt;</span>
+            )}
           </button>
         </div>
         {menuItems.map((item) => {
@@ -90,3 +89,4 @@ export function HRSidebar() {
     </aside>
   )
 }
+

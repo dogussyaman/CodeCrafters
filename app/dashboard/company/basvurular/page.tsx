@@ -3,27 +3,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Users, Clock } from "lucide-react"
 
-export default async function HRApplicationsPage() {
+export default async function CompanyApplicationsPage() {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("company_id")
-    .eq("id", user!.id)
-    .single()
+  if (!user) {
+    return null
+  }
 
-  // Şirketin ilanlarını al
-  const { data: myJobs } = await supabase
+  const { data: profile } = await supabase.from("profiles").select("company_id").eq("id", user.id).single()
+
+  const { data: companyJobs } = await supabase
     .from("job_postings")
     .select("id")
     .eq("company_id", profile?.company_id ?? "")
 
-  const jobIds = myJobs?.map((job) => job.id) || []
+  const jobIds = companyJobs?.map((job) => job.id) || []
 
-  // Bu ilanlara yapılan başvuruları al
   const { data: applications } = await supabase
     .from("applications")
     .select(
@@ -67,7 +65,7 @@ export default async function HRApplicationsPage() {
     <div className="container mx-auto px-4 py-8 space-y-8 min-h-screen">
       <div>
         <h1 className="text-3xl font-bold text-foreground mb-2">Başvurular</h1>
-        <p className="text-muted-foreground">İlanlarınıza yapılan başvuruları inceleyin</p>
+        <p className="text-muted-foreground">Şirket ilanlarınıza yapılan başvuruları inceleyin</p>
       </div>
 
       {!applications || applications.length === 0 ? (
@@ -83,7 +81,10 @@ export default async function HRApplicationsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {applications.map((application: any) => (
-            <Card key={application.id} className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card
+              key={application.id}
+              className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -110,3 +111,4 @@ export default async function HRApplicationsPage() {
     </div>
   )
 }
+

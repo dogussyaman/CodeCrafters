@@ -1,0 +1,126 @@
+import { createClient } from "@/lib/supabase/server"
+
+export default async function HrCompanyPage() {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return null
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("company_id")
+    .eq("id", user.id)
+    .single()
+
+  if (!profile?.company_id) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-3xl min-h-screen">
+        <div className="rounded-xl border bg-card p-6 space-y-3">
+          <h1 className="text-2xl font-bold">Şirket Bilgisi Bulunamadı</h1>
+          <p className="text-sm text-muted-foreground">
+            Bu İK kullanıcısına bağlı bir şirket bulunamadı. Lütfen şirket yöneticiniz ile iletişime geçin.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  const { data: company } = await supabase
+    .from("companies")
+    .select("id, name, description, location, website, industry, employee_count")
+    .eq("id", profile.company_id)
+    .single()
+
+  const { count: jobCount } = await supabase
+    .from("job_postings")
+    .select("*", { count: "exact", head: true })
+    .eq("company_id", company?.id ?? "")
+
+  const { data: companyJobs } = await supabase
+    .from("job_postings")
+    .select("id")
+    .eq("company_id", company?.id ?? "")
+
+  const jobIds = companyJobs?.map((j) => j.id) || []
+
+  const { count: applicationCount } = await supabase
+    .from("applications")
+    .select("*", { count: "exact", head: true })
+    .in("job_id", jobIds.length > 0 ? jobIds : [""])
+
+  return (
+    <div className="container mx-auto px-4 py-8 space-y-8 min-h-screen">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold">
+          {company?.name ?? "Şirket Bilgileri"}
+        </h1>
+        <p className="text-muted-foreground">
+          Bağlı olduğunuz şirketin temel bilgilerini ve istatistiklerini görüntüleyin.
+        </p>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="rounded-xl border bg-card p-6 flex flex-col gap-2">
+          <p className="text-sm font-medium text-muted-foreground">Toplam İlan</p>
+          <p className="text-3xl font-semibold">{jobCount ?? 0}</p>
+        </div>
+
+        <div className="rounded-xl border bg-card p-6 flex flex-col gap-2">
+          <p className="text-sm font-medium text-muted-foreground">Toplam Başvuru</p>
+          <p className="text-3xl font-semibold">{applicationCount ?? 0}</p>
+        </div>
+
+        <div className="rounded-xl border bg-card p-6 flex flex-col gap-2">
+          <p className="text-sm font-medium text-muted-foreground">Çalışan Sayısı (profil)</p>
+          <p className="text-3xl font-semibold">
+            {company?.employee_count ? company.employee_count : "-"}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="rounded-xl border bg-card p-6 space-y-3">
+          <h2 className="text-lg font-semibold">Şirket Bilgileri</h2>
+          <div className="space-y-1 text-sm text-muted-foreground">
+            <p>
+              <span className="font-medium text-foreground">Sektör: </span>
+              {company?.industry || "-"}
+            </p>
+            <p>
+              <span className="font-medium text-foreground">Konum: </span>
+              {company?.location || "-"}
+            </p>
+            <p>
+              <span className="font-medium text-foreground">Website: </span>
+              {company?.website ? (
+                <a
+                  href={company.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary underline-offset-2 hover:underline"
+                >
+                  {company.website}
+                </a>
+              ) : (
+                "-"
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-xl border bg-card p-6 space-y-3">
+          <h2 className="text-lg font-semibold">Açıklama</h2>
+          <p className="text-sm text-muted-foreground">
+            {company?.description || "Şirket açıklaması henüz eklenmemiş."}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+

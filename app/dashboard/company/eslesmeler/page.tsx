@@ -3,27 +3,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Star } from "lucide-react"
 
-export default async function HRMatchesPage() {
+export default async function CompanyMatchesPage() {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("company_id")
-    .eq("id", user!.id)
-    .single()
+  if (!user) {
+    return null
+  }
 
-  // Şirketin ilanlarını al
-  const { data: myJobs } = await supabase
+  const { data: profile } = await supabase.from("profiles").select("company_id").eq("id", user.id).single()
+
+  const { data: companyJobs } = await supabase
     .from("job_postings")
     .select("id")
     .eq("company_id", profile?.company_id ?? "")
 
-  const jobIds = myJobs?.map((job) => job.id) || []
+  const jobIds = companyJobs?.map((job) => job.id) || []
 
-  // Bu ilanlara ait eşleşmeleri al
   const { data: matches } = await supabase
     .from("matches")
     .select(
@@ -46,7 +44,7 @@ export default async function HRMatchesPage() {
     <div className="container mx-auto px-4 py-8 space-y-8 min-h-screen">
       <div>
         <h1 className="text-3xl font-bold text-foreground mb-2">Eşleşmeler</h1>
-        <p className="text-muted-foreground">İş ilanlarınıza uygun bulunan adaylar</p>
+        <p className="text-muted-foreground">Şirket ilanlarınıza uygun bulunan adaylar</p>
       </div>
 
       {!matches || matches.length === 0 ? (
@@ -62,7 +60,10 @@ export default async function HRMatchesPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {matches.map((match: any) => (
-            <Card key={match.id} className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800 hover:border-primary/50 transition-colors">
+            <Card
+              key={match.id}
+              className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800 hover:border-primary/50 transition-colors"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -84,3 +85,4 @@ export default async function HRMatchesPage() {
     </div>
   )
 }
+

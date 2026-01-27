@@ -14,7 +14,7 @@ import { motion } from "motion/react"
 
 export function HeroSection() {
     return (
-        <section className="container mx-auto px-4 pt-32 pb-20 md:pt-40 md:pb-32">
+        <section className="container mx-auto px-4 pt-24 pb-16 md:pt-32 md:pb-24">
             <div className="max-w-5xl mx-auto text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -77,7 +77,7 @@ export function HeroSection() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.5 }}
-                    className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
+                    className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
                 >
                     {[
                         { value: "%98", label: "Eşleşme Doğruluğu", icon: Target },

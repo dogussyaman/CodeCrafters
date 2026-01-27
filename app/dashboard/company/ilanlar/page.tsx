@@ -5,17 +5,17 @@ import { Badge } from "@/components/ui/badge"
 import { Briefcase, Plus, MapPin, DollarSign } from "lucide-react"
 import Link from "next/link"
 
-export default async function JobsPage() {
+export default async function CompanyJobsPage() {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("company_id")
-    .eq("id", user!.id)
-    .single()
+  if (!user) {
+    return null
+  }
+
+  const { data: profile } = await supabase.from("profiles").select("company_id").eq("id", user.id).single()
 
   const { data: jobs } = await supabase
     .from("job_postings")
@@ -42,10 +42,10 @@ export default async function JobsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">İş İlanları</h1>
-          <p className="text-muted-foreground">İş ilanlarınızı oluşturun ve yönetin</p>
+          <p className="text-muted-foreground">Şirketiniz için ilanlar oluşturun ve yönetin</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/ik/ilanlar/olustur">
+          <Link href="/dashboard/company/ilanlar/olustur">
             <Plus className="mr-2 size-4" />
             Yeni İlan
           </Link>
@@ -61,7 +61,7 @@ export default async function JobsPage() {
               İlk iş ilanınızı oluşturarak aday aramaya başlayın
             </p>
             <Button asChild>
-              <Link href="/dashboard/ik/ilanlar/olustur">
+              <Link href="/dashboard/company/ilanlar/olustur">
                 <Plus className="mr-2 size-4" />
                 İlk İlanı Oluştur
               </Link>
@@ -71,7 +71,10 @@ export default async function JobsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {jobs.map((job: any) => (
-            <Card key={job.id} className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800 hover:border-primary/50 transition-colors">
+            <Card
+              key={job.id}
+              className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800 hover:border-primary/50 transition-colors"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -118,10 +121,10 @@ export default async function JobsPage() {
 
                 <div className="flex gap-2 pt-2">
                   <Button size="sm" variant="outline" asChild>
-                    <Link href={`/dashboard/ik/ilanlar/${job.id}`}>Düzenle</Link>
+                    <Link href={`/dashboard/company/ilanlar/${job.id}`}>Düzenle</Link>
                   </Button>
                   <Button size="sm" variant="outline" asChild>
-                    <Link href={`/dashboard/ik/eslesmeler?job=${job.id}`}>Eşleşmeleri Gör</Link>
+                    <Link href={`/dashboard/company/eslesmeler?job=${job.id}`}>Eşleşmeleri Gör</Link>
                   </Button>
                 </div>
               </CardContent>
@@ -132,3 +135,4 @@ export default async function JobsPage() {
     </div>
   )
 }
+
