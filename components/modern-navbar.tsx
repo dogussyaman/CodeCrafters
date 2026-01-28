@@ -1,39 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useMemo, useCallback } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Code2, Menu, X, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "./theme-toggle";
 import { Logo } from "./logo";
-import { createClient } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
+import { useAuth } from "@/hooks/use-auth";
 
 export function ModernNavbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [role, setRole] = useState<"developer" | "hr" | "admin" | null>(null);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname();
-  const supabase = useMemo(() => createClient(), []);
-
-  const fetchUserRole = useCallback(async (userId: string) => {
-    try {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", userId)
-        .single();
-      setRole(profile?.role || "developer");
-    } catch (error) {
-      console.error("Profile fetch error:", error);
-      setRole("developer");
-    }
-  }, [supabase]);
+  const { user, role, loading, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,65 +27,8 @@ export function ModernNavbar() {
     };
   }, []);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const initAuth = async () => {
-      try {
-        const { data: { user: currentUser } } = await supabase.auth.getUser();
-        
-        if (!isMounted) return;
-        
-        setUser(currentUser);
-        // Kullanıcı bilgisi geldiğinde loading'i false yap, butonları göster
-        setLoading(false);
-
-        // Rol bilgisini arka planda yükle (non-blocking)
-        if (currentUser) {
-          fetchUserRole(currentUser.id).catch((error) => {
-            console.error("Role fetch error:", error);
-          });
-        }
-      } catch (error) {
-        console.error("Auth initialization error:", error);
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    initAuth();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!isMounted) return;
-      
-      const currentUser = session?.user || null;
-      setUser(currentUser);
-      // Kullanıcı bilgisi geldiğinde loading'i false yap
-      setLoading(false);
-
-      // Rol bilgisini arka planda yükle (non-blocking)
-      if (currentUser) {
-        fetchUserRole(currentUser.id).catch((error) => {
-          console.error("Role fetch error:", error);
-        });
-      } else {
-        setRole(null);
-      }
-    });
-
-    return () => {
-      isMounted = false;
-      subscription.unsubscribe();
-    };
-  }, [supabase, fetchUserRole, pathname]);
-
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setRole(null);
+    await logout();
     setIsMobileMenuOpen(false);
     router.push("/");
     router.refresh();
@@ -129,13 +53,13 @@ export function ModernNavbar() {
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-4">
           {/* Logo */}
           {/* Logo */}
           <Logo />
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center justify-center gap-6">
             {[
               { href: "/hakkimizda", label: "Hakkımızda" },
               { href: "/projeler", label: "Projeler" },
@@ -158,7 +82,12 @@ export function ModernNavbar() {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
             <div className="h-6 w-px bg-border/50 mx-1" />
-            {!loading && (
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <div className="h-9 w-24 rounded-md bg-muted/60 animate-pulse" />
+                <div className="h-9 w-20 rounded-md bg-muted/60 animate-pulse" />
+              </div>
+            ) : (
               <>
                 {user ? (
                   <>
@@ -250,7 +179,12 @@ export function ModernNavbar() {
                 <div className="flex items-center justify-between px-2">
                   <ThemeToggle />
                 </div>
-                {!loading && (
+                {loading ? (
+                  <div className="space-y-2">
+                    <div className="h-11 w-full rounded-md bg-muted/60 animate-pulse" />
+                    <div className="h-11 w-full rounded-md bg-muted/60 animate-pulse" />
+                  </div>
+                ) : (
                   <div className="space-y-2">
                     {user ? (
                       <>
