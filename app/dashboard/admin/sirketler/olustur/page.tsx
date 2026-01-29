@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -12,12 +12,16 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertCircle, Building2, UserPlus } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { createClient } from "@/lib/supabase/client"
 
 export default function AdminCreateCompanyPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const fromRequestId = searchParams.get("from_request")
   const { toast } = useToast()
 
   const [loading, setLoading] = useState(false)
+  const [prefillLoading, setPrefillLoading] = useState(!!fromRequestId)
   const [error, setError] = useState<string | null>(null)
 
   const [companyForm, setCompanyForm] = useState({
@@ -40,6 +44,56 @@ export default function AdminCreateCompanyPage() {
     email: "",
     tempPassword: "",
   })
+
+  useEffect(() => {
+    if (!fromRequestId) return
+    const supabase = createClient()
+    const run = async () => {
+      try {
+        const { data: req, error: reqErr } = await supabase
+          .from("company_requests")
+          .select("company_name, company_website, company_description, company_size, industry, user_id, contact_email, contact_phone, contact_address")
+          .eq("id", fromRequestId)
+          .single()
+        if (reqErr || !req) {
+          setPrefillLoading(false)
+          return
+        }
+        setCompanyForm((prev) => ({
+          ...prev,
+          name: req.company_name ?? "",
+          website: req.company_website ?? "",
+          description: req.company_description ?? "",
+          employeeCount: req.company_size ?? "",
+          industry: req.industry ?? "",
+          contactEmail: req.contact_email ?? "",
+          phone: req.contact_phone ?? "",
+          address: req.contact_address ?? "",
+        }))
+        if (req.user_id) {
+          const { data: prof } = await supabase
+            .from("profiles")
+            .select("full_name, email")
+            .eq("id", req.user_id)
+            .single()
+          if (prof) {
+            setOwnerForm((prev) => ({
+              ...prev,
+              fullName: prof.full_name ?? "",
+              email: prof.email ?? "",
+            }))
+            setCompanyForm((prev) => ({
+              ...prev,
+              contactEmail: prev.contactEmail || (prof.email ?? ""),
+            }))
+          }
+        }
+      } finally {
+        setPrefillLoading(false)
+      }
+    }
+    run()
+  }, [fromRequestId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -90,13 +144,21 @@ export default function AdminCreateCompanyPage() {
         return
       }
 
+      if (fromRequestId && data.companyId) {
+        const supabase = createClient()
+        await supabase
+          .from("company_requests")
+          .update({ created_company_id: data.companyId })
+          .eq("id", fromRequestId)
+      }
+
       toast({
         title: "Şirket oluşturuldu",
         description:
           "Şirket sahibi için kullanıcı hesabı oluşturuldu ve e-posta kuyruğuna eklendi.",
       })
 
-      router.push("/dashboard/admin/sirketler")
+      router.push(fromRequestId ? "/dashboard/admin/sirket-talepleri" : "/dashboard/admin/sirketler")
     } catch (err: any) {
       console.error("Admin create company error:", err)
       setError(err?.message || "Beklenmeyen bir hata oluştu.")

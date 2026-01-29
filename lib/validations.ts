@@ -137,9 +137,65 @@ export const changePasswordSchema = z
     path: ["newPassword"],
   })
 
+/**
+ * Destek talebi formu validasyon şeması
+ * Giriş yapmamış kullanıcılar için email zorunludur; giriş yapmış kullanıcıda form oturumdan doldurur.
+ */
+export const supportTicketFormSchema = z.object({
+  email: z
+    .string()
+    .min(1, "E-posta adresi gereklidir")
+    .email("Geçerli bir e-posta adresi giriniz")
+    .regex(emailRegex, "Geçerli bir e-posta formatı giriniz"),
+  type: z.enum(["login_error", "feedback", "technical", "other"], {
+    required_error: "Talep türü seçiniz",
+    invalid_type_error: "Geçerli bir talep türü seçiniz",
+  }),
+  subject: z
+    .string()
+    .min(1, "Konu gereklidir")
+    .max(200, "Konu en fazla 200 karakter olabilir"),
+  description: z
+    .string()
+    .min(10, "Açıklama en az 10 karakter olmalıdır")
+    .max(5000, "Açıklama en fazla 5000 karakter olabilir"),
+  priority: z.enum(["low", "medium", "high", "urgent"], {
+    required_error: "Öncelik seçiniz",
+    invalid_type_error: "Geçerli bir öncelik seçiniz",
+  }),
+})
+
+/**
+ * Şirket kayıt talebi formu (girişli kullanıcı; user_id oturumdan alınır)
+ * contact_email/contact_phone/contact_address admin şirket oluştururken kullanılır.
+ */
+export const companyRequestFormSchema = z.object({
+  company_name: z
+    .string()
+    .min(2, "Şirket adı en az 2 karakter olmalıdır")
+    .max(200, "Şirket adı en fazla 200 karakter olabilir"),
+  company_website: z.string().max(500).optional(),
+  company_description: z.string().max(2000).optional(),
+  company_size: z.string().max(50).optional(),
+  industry: z.string().max(100).optional(),
+  reason: z
+    .string()
+    .min(10, "Gerekçe en az 10 karakter olmalıdır")
+    .max(2000, "Gerekçe en fazla 2000 karakter olabilir"),
+  contact_email: z
+    .string()
+    .max(255)
+    .optional()
+    .refine((val) => !val || emailRegex.test(val), "Geçerli bir e-posta adresi giriniz"),
+  contact_phone: z.string().max(50).optional(),
+  contact_address: z.string().max(500).optional(),
+})
+
 export type SignUpFormValues = z.infer<typeof signUpSchema>
 export type SignInFormValues = z.infer<typeof signInSchema>
 export type ContactFormValues = z.infer<typeof contactFormSchema>
+export type SupportTicketFormValues = z.infer<typeof supportTicketFormSchema>
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>
 export type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>
+export type CompanyRequestFormValues = z.infer<typeof companyRequestFormSchema>

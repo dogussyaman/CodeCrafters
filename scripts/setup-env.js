@@ -124,7 +124,8 @@ SUPABASE_URL="${projectUrl}"
   
   console.log('\n✅ .env.local dosyası başarıyla oluşturuldu!\n');
   console.log('📝 Dosya konumu:', envPath);
-  console.log('\n⚠️  RESEND_API_KEY değerini manuel olarak eklemeyi unutmayın!\n');
+  console.log('\n⚠️  RESEND_API_KEY değerini manuel olarak eklemeyi unutmayın!');
+  console.log('   E-posta kuyruğu (email_queue) için: RESEND_FROM (örn. "CodeCrafters <noreply@alaniniz.com>"), CRON_SECRET (api/cron/send-email-queue koruması).\n');
   
   rl.close();
 }

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { CreateCompanyRequestForm } from "@/components/company-request/create-company-request-form"
 import {
   Building2,
   Users,
@@ -373,6 +374,32 @@ export default function IsverenPage() {
           </div>
         </div>
       </section>
+
+      <Separator className="max-w-6xl mx-auto" />
+
+      {/* Şirket kayıt talebi */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <Card className="border-primary/20 shadow-lg">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-6 w-6 text-primary" />
+                  <CardTitle>Şirket kayıt talebi</CardTitle>
+                </div>
+                <CardDescription>
+                  Platformda şirket hesabı açmak için giriş yapıp talebinizi gönderin. İncelendikten sonra size dönüş yapacağız.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CreateCompanyRequestForm />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      <Separator className="max-w-6xl mx-auto" />
 
       {/* Pricing CTA Section */}
       <section className="py-20 bg-muted/30">

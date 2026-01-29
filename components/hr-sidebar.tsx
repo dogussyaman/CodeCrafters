@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Building2, Briefcase, Users, Star, Home, ArrowLeft, ArrowRight, Bell } from "lucide-react"
+import { Building2, Briefcase, Users, Star, Home, ArrowLeft, ArrowRight, Bell, Ticket } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -36,6 +36,11 @@ const menuItems = [
     title: "Bildirimler",
     href: "/dashboard/ik/bildirimler",
     icon: Bell,
+  },
+  {
+    title: "Destek Taleplerim",
+    href: "/dashboard/ik/destek",
+    icon: Ticket,
   },
 ]
 

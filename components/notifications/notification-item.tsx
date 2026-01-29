@@ -2,7 +2,7 @@
 
 import { formatDistanceToNow } from "date-fns"
 import { tr } from "date-fns/locale"
-import { Bell, Briefcase, FileText, Mail, CheckCircle2, XCircle, AlertCircle } from "lucide-react"
+import { Bell, Briefcase, FileText, Mail, CheckCircle2, XCircle, AlertCircle, MessageSquare } from "lucide-react"
 import Link from "next/link"
 import type { Notification } from "@/lib/types"
 import { cn } from "@/lib/utils"
@@ -26,6 +26,8 @@ const getNotificationIcon = (type: string) => {
             return <XCircle className="size-5 text-red-500" />
         case "new_contact_message":
             return <Mail className="size-5 text-purple-500" />
+        case "support_ticket_resolved":
+            return <MessageSquare className="size-5 text-green-500" />
         case "system":
             return <AlertCircle className="size-5 text-amber-500" />
         default:

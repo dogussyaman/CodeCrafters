@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Home, Users, Building2, Briefcase, Star, BarChart3, Settings, ArrowLeft, ArrowRight, Bell } from "lucide-react"
+import { Home, Users, Building2, Briefcase, Star, BarChart3, Settings, ArrowLeft, ArrowRight, Bell, ClipboardList } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -21,6 +21,11 @@ const menuItems = [
     title: "Şirketler",
     href: "/dashboard/admin/sirketler",
     icon: Building2,
+  },
+  {
+    title: "Şirket Talepleri",
+    href: "/dashboard/admin/sirket-talepleri",
+    icon: ClipboardList,
   },
   {
     title: "İş İlanları",
