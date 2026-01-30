@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { FileText, Home, Briefcase, Star, User, Search, PenTool, ArrowLeft, ArrowRight, Bell, Ticket } from "lucide-react"
+import { FileText, Home, Briefcase, Star, User, Search, PenTool, ArrowLeft, ArrowRight, Bell, Ticket, MessageCircle } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -41,6 +41,11 @@ const menuItems = [
     title: "Destek Taleplerim",
     href: "/dashboard/gelistirici/destek",
     icon: Ticket,
+  },
+  {
+    title: "Canlı Sohbet",
+    href: "/dashboard/gelistirici/destek-sohbet",
+    icon: MessageCircle,
   },
   {
     title: "İş İlanları",
