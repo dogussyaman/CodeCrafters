@@ -75,6 +75,7 @@ Bilgisayarınızda **Node.js** yüklü olduğundan emin olun.
    `.env.local` dosyasını açın ve Supabase bilgilerinizi girin:
    - `NEXT_PUBLIC_SUPABASE_URL`: Supabase proje URL'iniz.
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anon API anahtarınız.
+   - `SUPABASE_SERVICE_ROLE_KEY`: (Opsiyonel) Şirket/HR oluşturma ve cron API'leri için; sadece sunucu tarafında kullanılır, client'a gönderilmez.
 
 4. **Geliştirme Sunucusunu Başlatın:**
    ```bash

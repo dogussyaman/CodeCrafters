@@ -60,7 +60,14 @@ export function LoginForm() {
                     return
                 }
 
-                if (profile?.role === "admin") {
+                if (profile?.role === "mt") {
+                    await supabase.auth.signOut()
+                    setError(
+                        "Bu hesap müşteri temsilcisi (MT) paneli içindir. Lütfen MT Dashboard uygulamasından giriş yapın."
+                    )
+                    return
+                }
+                if (profile?.role === "admin" || profile?.role === "platform_admin") {
                     router.push("/dashboard/admin")
                 } else if (profile?.role === "hr") {
                     router.push("/dashboard/ik")
