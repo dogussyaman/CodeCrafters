@@ -148,13 +148,18 @@ export function useChatParticipant(userId: string | undefined) {
       const hasContent = content.trim().length > 0
       const hasAttachments = attachmentUrls && attachmentUrls.length > 0
       if (!hasContent && !hasAttachments) return false
+      const {
+        data: { user: currentUser },
+      } = await supabase.auth.getUser()
+      const senderId = currentUser?.id ?? userId
+      if (!senderId) return false
       setSending(true)
       try {
         const { data: newMessage, error } = await supabase
           .from("chat_messages")
           .insert({
             conversation_id: selectedConversationId,
-            sender_id: userId,
+            sender_id: senderId,
             content: content.trim() || " ",
             attachment_urls: attachmentUrls ?? [],
           })

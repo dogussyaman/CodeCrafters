@@ -11,7 +11,7 @@ export default async function GelistiriciDestekSohbetPage() {
   if (!user) redirect("/auth/giris")
 
   return (
-    <div className="container mx-auto flex max-w-6xl flex-col px-4 py-6 animate-in fade-in duration-300 h-[calc(100vh-8rem)] min-h-[480px]">
+    <div className="container mx-auto flex max-w-6xl flex-1 flex-col min-h-0 px-4 py-6 animate-in fade-in duration-300">
       <div className="flex shrink-0 items-center gap-2">
         <MessageCircle className="size-6 text-primary" />
         <h1 className="text-2xl font-bold">Canlı Destek Sohbeti</h1>

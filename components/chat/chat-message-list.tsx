@@ -2,7 +2,6 @@
 
 import { useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import type { ChatMessage } from "@/lib/types"
 import { format } from "date-fns"
@@ -15,13 +14,16 @@ interface ChatMessageListProps {
 }
 
 export function ChatMessageList({ messages, currentUserId, loading }: ChatMessageListProps) {
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
   const prevLastIdRef = useRef<string | null>(null)
 
   useEffect(() => {
     const lastId = messages.length > 0 ? messages[messages.length - 1].id : null
     if (lastId != null && lastId !== prevLastIdRef.current) {
-      scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+      const el = scrollContainerRef.current
+      if (el) {
+        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" })
+      }
       prevLastIdRef.current = lastId
     }
     if (lastId == null) prevLastIdRef.current = null
@@ -55,7 +57,10 @@ export function ChatMessageList({ messages, currentUserId, loading }: ChatMessag
   }
 
   return (
-    <ScrollArea className="h-full min-h-0 flex-1 overflow-hidden">
+    <div
+      ref={scrollContainerRef}
+      className="h-full min-h-0 flex-1 overflow-y-auto overflow-x-hidden"
+    >
       <div className="flex flex-col gap-4 p-4">
         {messages.map((m) => {
           const isOwn = m.sender_id === currentUserId
@@ -66,7 +71,7 @@ export function ChatMessageList({ messages, currentUserId, loading }: ChatMessag
             >
               <Avatar className="size-8 shrink-0">
                 <AvatarFallback className="text-xs">
-                  {isOwn ? "Siz" : "MT"}
+                  {isOwn ? "Siz" : "Destek"}
                 </AvatarFallback>
               </Avatar>
               <div
@@ -109,8 +114,7 @@ export function ChatMessageList({ messages, currentUserId, loading }: ChatMessag
             </div>
           )
         })}
-        <div ref={scrollRef} />
       </div>
-    </ScrollArea>
+    </div>
   )
 }
