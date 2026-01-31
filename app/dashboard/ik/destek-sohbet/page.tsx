@@ -11,15 +11,17 @@ export default async function IKDestekSohbetPage() {
   if (!user) redirect("/auth/giris")
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-6 animate-in fade-in duration-300">
-      <div className="mb-6 flex items-center gap-2">
+    <div className="container mx-auto flex max-w-6xl flex-col px-4 py-6 animate-in fade-in duration-300 h-[calc(100vh-8rem)] min-h-[480px]">
+      <div className="flex shrink-0 items-center gap-2">
         <MessageCircle className="size-6 text-primary" />
         <h1 className="text-2xl font-bold">Canlı Destek Sohbeti</h1>
       </div>
-      <p className="mb-6 text-sm text-muted-foreground">
+      <p className="mb-2 shrink-0 text-sm text-muted-foreground">
         Destek ekibimizle anlık sohbet edebilirsiniz. Mesajlarınız canlı iletilir.
       </p>
-      <ChatPanel userId={user.id} />
+      <div className="min-h-0 flex-1 overflow-hidden">
+        <ChatPanel userId={user.id} />
+      </div>
     </div>
   )
 }

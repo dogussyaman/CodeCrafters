@@ -43,7 +43,7 @@ export function useChatParticipant(userId: string | undefined) {
     try {
       const { data, error } = await supabase
         .from("chat_messages")
-        .select("*")
+        .select("id, conversation_id, sender_id, content, attachment_urls, read_at, created_at")
         .eq("conversation_id", conversationId)
         .order("created_at", { ascending: true })
 

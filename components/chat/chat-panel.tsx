@@ -23,7 +23,7 @@ export function ChatPanel({ userId }: ChatPanelProps) {
   } = useChatParticipant(userId)
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] min-h-[400px] overflow-hidden rounded-lg border border-border bg-card">
+    <div className="flex h-full min-h-[400px] overflow-hidden rounded-lg border border-border bg-card">
       <div className="w-64 shrink-0 md:w-72">
         <ChatConversationList
           conversations={conversations}
@@ -34,7 +34,7 @@ export function ChatPanel({ userId }: ChatPanelProps) {
           creating={sending}
         />
       </div>
-      <div className="flex flex-1 flex-col min-w-0">
+      <div className="flex min-h-0 flex-1 flex-col min-w-0">
         {selectedConversationId ? (
           <>
             <div className="shrink-0 border-b border-border px-4 py-2">
@@ -42,11 +42,13 @@ export function ChatPanel({ userId }: ChatPanelProps) {
                 Canlı destek sohbeti — mesajlar anlık iletilir.
               </p>
             </div>
-            <ChatMessageList
-              messages={messages}
-              currentUserId={userId}
-              loading={loadingMessages}
-            />
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+              <ChatMessageList
+                messages={messages}
+                currentUserId={userId}
+                loading={loadingMessages}
+              />
+            </div>
             <ChatMessageInput
               onSend={(content, urls) => sendMessage(content, urls)}
               disabled={sending}

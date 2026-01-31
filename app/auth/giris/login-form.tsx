@@ -34,8 +34,15 @@ export function LoginForm() {
         const passwordReset = searchParams.get("password_reset")
         if (passwordReset === "success") {
             setSuccess("Şifreniz başarıyla sıfırlandı. Lütfen yeni şifrenizle giriş yapın.")
-            // URL'den query parametresini temizle
             router.replace("/auth/giris")
+            return
+        }
+        const urlError = searchParams.get("error")
+        const urlMessage = searchParams.get("message") ?? ""
+        if (urlError && (urlMessage.toLowerCase().includes("mt") || urlMessage.includes("müşteri temsilcisi"))) {
+            setError(null)
+            setShowMtDialog(true)
+            return
         }
     }, [searchParams, router])
 

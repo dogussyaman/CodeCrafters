@@ -55,7 +55,7 @@ export function ChatMessageList({ messages, currentUserId, loading }: ChatMessag
   }
 
   return (
-    <ScrollArea className="flex-1">
+    <ScrollArea className="h-full min-h-0 flex-1 overflow-hidden">
       <div className="flex flex-col gap-4 p-4">
         {messages.map((m) => {
           const isOwn = m.sender_id === currentUserId
