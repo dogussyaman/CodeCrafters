@@ -48,9 +48,11 @@ export function ChatPanel({ userId }: ChatPanelProps) {
               loading={loadingMessages}
             />
             <ChatMessageInput
-              onSend={sendMessage}
+              onSend={(content, urls) => sendMessage(content, urls)}
               disabled={sending}
               placeholder="Mesajınızı yazın..."
+              conversationId={selectedConversationId}
+              userId={userId}
             />
           </>
         ) : (

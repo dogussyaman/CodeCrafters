@@ -39,13 +39,15 @@ async function processQueue(request: Request) {
     )
   }
 
-  const from = process.env.RESEND_FROM ?? "CodeCrafters <hello@notificationscodecrafters.xyz>"
+  const fromHello = process.env.RESEND_FROM ?? "CodeCrafters <hello@notificationscodecrafters.xyz>"
+  const fromSupport = process.env.RESEND_FROM_SUPPORT ?? "CodeCrafters <support@notificationscodecrafters.xyz>"
+  const supportEmailTypes = ["ticket_resolved"]
   const resend = new Resend(apiKey)
   const supabase = createAdminClient()
 
   const { data: rows, error: fetchError } = await supabase
     .from("email_queue")
-    .select("id, recipient_email, recipient_name, subject, html_content, text_content, retry_count")
+    .select("id, recipient_email, recipient_name, subject, html_content, text_content, retry_count, email_type")
     .eq("status", "pending")
     .order("created_at", { ascending: true })
     .limit(BATCH_SIZE)
@@ -66,6 +68,7 @@ async function processQueue(request: Request) {
   let failed = 0
 
   for (const row of rows) {
+    const from = supportEmailTypes.includes(row.email_type ?? "") ? fromSupport : fromHello
     const { error: sendError } = await resend.emails.send({
       from,
       to: row.recipient_email,

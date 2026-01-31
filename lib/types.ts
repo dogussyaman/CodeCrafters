@@ -188,6 +188,7 @@ export interface ChatMessage {
   conversation_id: string
   sender_id: string
   content: string
+  attachment_urls?: string[]
   read_at: string | null
   created_at: string
 }

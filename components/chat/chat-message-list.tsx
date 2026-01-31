@@ -16,9 +16,15 @@ interface ChatMessageListProps {
 
 export function ChatMessageList({ messages, currentUserId, loading }: ChatMessageListProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const prevLastIdRef = useRef<string | null>(null)
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+    const lastId = messages.length > 0 ? messages[messages.length - 1].id : null
+    if (lastId != null && lastId !== prevLastIdRef.current) {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+      prevLastIdRef.current = lastId
+    }
+    if (lastId == null) prevLastIdRef.current = null
   }, [messages])
 
   if (loading) {
@@ -69,7 +75,28 @@ export function ChatMessageList({ messages, currentUserId, loading }: ChatMessag
                   isOwn ? "bg-primary text-primary-foreground" : "bg-muted"
                 )}
               >
-                <p className="whitespace-pre-wrap break-words text-sm">{m.content}</p>
+                {m.content.trim() ? (
+                  <p className="whitespace-pre-wrap break-words text-sm">{m.content}</p>
+                ) : null}
+                {m.attachment_urls?.length ? (
+                  <div className="flex flex-wrap gap-1">
+                    {m.attachment_urls.map((url) => (
+                      <a
+                        key={url}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block overflow-hidden rounded"
+                      >
+                        <img
+                          src={url}
+                          alt=""
+                          className="max-h-48 max-w-full object-contain"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
                 <span
                   className={cn(
                     "text-xs",

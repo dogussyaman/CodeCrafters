@@ -48,7 +48,23 @@ export function useChatParticipant(userId: string | undefined) {
         .order("created_at", { ascending: true })
 
       if (error) throw error
-      setMessages((data as ChatMessage[]) ?? [])
+      const list = (data as ChatMessage[]) ?? []
+      if (silent) {
+        setMessages((prev) => {
+          const ids = new Set(prev.map((m) => m.id))
+          const newOnes = list.filter((m) => !ids.has(m.id))
+          if (newOnes.length === 0) return prev
+          const merged = [...prev]
+          for (const m of newOnes) merged.push(m)
+          merged.sort(
+            (a, b) =>
+              new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          )
+          return merged
+        })
+      } else {
+        setMessages(list)
+      }
     } catch (e) {
       if (!silent) console.error("Chat messages fetch error:", e)
       if (!silent) setMessages([])
@@ -127,8 +143,11 @@ export function useChatParticipant(userId: string | undefined) {
   }, [userId, fetchConversations])
 
   const sendMessage = useCallback(
-    async (content: string) => {
-      if (!selectedConversationId || !userId || !content.trim()) return false
+    async (content: string, attachmentUrls?: string[]) => {
+      if (!selectedConversationId || !userId) return false
+      const hasContent = content.trim().length > 0
+      const hasAttachments = attachmentUrls && attachmentUrls.length > 0
+      if (!hasContent && !hasAttachments) return false
       setSending(true)
       try {
         const { data: newMessage, error } = await supabase
@@ -136,7 +155,8 @@ export function useChatParticipant(userId: string | undefined) {
           .insert({
             conversation_id: selectedConversationId,
             sender_id: userId,
-            content: content.trim(),
+            content: content.trim() || " ",
+            attachment_urls: attachmentUrls ?? [],
           })
           .select("*")
           .single()
