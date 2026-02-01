@@ -79,6 +79,42 @@ CodeCrafters/
 
 ---
 
+## Proje Çalışma Mantığı
+
+CodeCrafters, geliştiriciler ile işverenleri buluşturan bir kariyer platformudur. Akış özetle şöyledir:
+
+- **Geliştirici:** Kayıt olur, CV/profil doldurur, yeteneklerini ekler. Platform yapay zeka destekli eşleşme ile uygun iş ilanlarını önerir. Geliştirici iş ilanlarına başvurabilir, projelerini paylaşabilir, blog yazıları yayınlayabilir.
+- **İşveren / İK:** Şirket kaydı ve iş ilanı açar. Eşleşen adayları görür, başvuruları yönetir.
+- **Destek:** Canlı sohbet ve destek talepleri ile kullanıcılar yardım alabilir.
+- **Blog & Projeler:** Herkese açık blog ve projeler bölümü; geliştiriciler yazı yazabilir, proje ekleyebilir ve katılma isteği gönderebilir.
+
+Aşağıdaki diyagram ana akışı özetler:
+
+```mermaid
+flowchart LR
+  subgraph gelistirici [Geliştirici]
+    Kayit[Kayıt]
+    CV[CV / Profil]
+    Eslesme[Eşleşmeler]
+    Basvuru[Başvurular]
+    Blog[Blog Yazıları]
+    Projeler[Projeler]
+  end
+  subgraph isveren [İşveren]
+    Ilan[İş İlanları]
+    Aday[Adaylar]
+  end
+  Kayit --> CV
+  CV --> Eslesme
+  Eslesme --> Basvuru
+  CV --> Blog
+  CV --> Projeler
+  Ilan --> Aday
+  Eslesme -.-> Ilan
+```
+
+---
+
 ## Teknoloji
 
 - **Framework:** Next.js 16 (App Router, Server Actions)

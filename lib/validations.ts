@@ -169,6 +169,8 @@ export const supportTicketFormSchema = z.object({
  * Şirket kayıt talebi formu (girişli kullanıcı; user_id oturumdan alınır)
  * contact_email/contact_phone/contact_address admin şirket oluştururken kullanılır.
  */
+const planEnum = z.enum(["free", "orta", "premium"])
+
 export const companyRequestFormSchema = z.object({
   company_name: z
     .string()
@@ -189,6 +191,7 @@ export const companyRequestFormSchema = z.object({
     .refine((val) => !val || emailRegex.test(val), "Geçerli bir e-posta adresi giriniz"),
   contact_phone: z.string().max(50).optional(),
   contact_address: z.string().max(500).optional(),
+  plan: planEnum.optional().default("free"),
 })
 
 export type SignUpFormValues = z.infer<typeof signUpSchema>

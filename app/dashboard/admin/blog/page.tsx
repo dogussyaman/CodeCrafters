@@ -1,0 +1,84 @@
+import Link from "next/link"
+import { createServerClient } from "@/lib/supabase/server"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Plus, Pencil, FileText } from "lucide-react"
+import { BlogPostDeleteButton } from "./_components/BlogPostDeleteButton"
+
+export default async function AdminBlogPage() {
+  const supabase = await createServerClient()
+  const { data: posts } = await supabase
+    .from("blog_posts")
+    .select("id, title, slug, status, published_at, created_at, profiles(full_name)")
+    .order("created_at", { ascending: false })
+
+  return (
+    <div className="space-y-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Blog</h1>
+          <p className="text-muted-foreground">Blog yazılarını yönetin.</p>
+        </div>
+        <Button asChild>
+          <Link href="/dashboard/admin/blog/olustur" className="gap-2">
+            <Plus className="size-4" />
+            Yeni yazı
+          </Link>
+        </Button>
+      </div>
+
+      {!posts?.length ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <FileText className="size-12 text-muted-foreground mb-4" />
+            <p className="text-muted-foreground mb-4">Henüz yazı yok.</p>
+            <Button asChild>
+              <Link href="/dashboard/admin/blog/olustur" className="gap-2">
+                <Plus className="size-4" />
+                İlk yazıyı oluştur
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-4">
+          {posts.map((post) => (
+            <Card key={post.id}>
+              <CardHeader className="flex flex-row items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="truncate">{post.title}</CardTitle>
+                  <CardDescription>
+                    /blog/{post.slug} · {(post as { profiles?: { full_name?: string } | null }).profiles?.full_name ?? "—"} ·{" "}
+                    {post.published_at
+                      ? new Date(post.published_at).toLocaleDateString("tr-TR")
+                      : new Date(post.created_at).toLocaleDateString("tr-TR")}
+                  </CardDescription>
+                </div>
+                <Badge variant={post.status === "published" ? "default" : "secondary"}>
+                  {post.status === "published" ? "Yayında" : "Taslak"}
+                </Badge>
+              </CardHeader>
+              <CardContent className="flex gap-2">
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/dashboard/admin/blog/${post.id}/duzenle`} className="gap-1">
+                    <Pencil className="size-3.5" />
+                    Düzenle
+                  </Link>
+                </Button>
+                {post.status === "published" && (
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link href={`/blog/${post.slug}`} target="_blank">
+                      Görüntüle
+                    </Link>
+                  </Button>
+                )}
+                <BlogPostDeleteButton postId={post.id} postTitle={post.title} />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}

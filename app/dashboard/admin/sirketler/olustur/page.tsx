@@ -37,6 +37,7 @@ export default function AdminCreateCompanyPage() {
     address: "",
     phone: "",
     contactEmail: "",
+    plan: "free" as "free" | "orta" | "premium",
   })
 
   const [ownerForm, setOwnerForm] = useState({
@@ -52,13 +53,14 @@ export default function AdminCreateCompanyPage() {
       try {
         const { data: req, error: reqErr } = await supabase
           .from("company_requests")
-          .select("company_name, company_website, company_description, company_size, industry, user_id, contact_email, contact_phone, contact_address")
+          .select("company_name, company_website, company_description, company_size, industry, user_id, contact_email, contact_phone, contact_address, plan")
           .eq("id", fromRequestId)
           .single()
         if (reqErr || !req) {
           setPrefillLoading(false)
           return
         }
+        const planValue = req.plan === "orta" || req.plan === "premium" ? req.plan : "free"
         setCompanyForm((prev) => ({
           ...prev,
           name: req.company_name ?? "",
@@ -69,6 +71,7 @@ export default function AdminCreateCompanyPage() {
           contactEmail: req.contact_email ?? "",
           phone: req.contact_phone ?? "",
           address: req.contact_address ?? "",
+          plan: planValue,
         }))
         if (req.user_id) {
           const { data: prof } = await supabase
@@ -125,6 +128,7 @@ export default function AdminCreateCompanyPage() {
           address: companyForm.address || undefined,
           phone: companyForm.phone || undefined,
           contactEmail: companyForm.contactEmail || ownerForm.email,
+          plan: companyForm.plan,
           ownerFullName: ownerForm.fullName,
           ownerEmail: ownerForm.email,
           tempPassword: ownerForm.tempPassword || undefined,
@@ -210,6 +214,25 @@ export default function AdminCreateCompanyPage() {
                 placeholder="Örn: Acme Technology"
                 required
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Plan</Label>
+              <div className="flex flex-wrap gap-4">
+                {(["free", "orta", "premium"] as const).map((p) => (
+                  <label key={p} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="plan"
+                      value={p}
+                      checked={companyForm.plan === p}
+                      onChange={() => setCompanyForm({ ...companyForm, plan: p })}
+                      className="rounded-full border-input"
+                    />
+                    <span className="text-sm capitalize">{p === "orta" ? "Orta" : p === "premium" ? "Premium" : "Free"}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">

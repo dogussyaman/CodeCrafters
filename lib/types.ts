@@ -144,6 +144,7 @@ export interface Project {
   category?: string
   created_by?: string
   status: ContentStatus
+  inspired_by?: string | null
   created_at: string
   updated_at: string
 }
@@ -154,6 +155,16 @@ export interface ProjectLike {
   project_id: string
   user_id: string
   created_at: string
+}
+
+export interface ProjectJoinRequest {
+  id: string
+  project_id: string
+  user_id: string
+  message: string | null
+  status: "pending" | "approved" | "rejected"
+  created_at: string
+  responded_at: string | null
 }
 
 
@@ -167,6 +178,27 @@ export interface Notification {
   href: string | null
   data: Record<string, any>
   read_at: string | null
+  created_at: string
+}
+
+export interface BlogPost {
+  id: string
+  title: string
+  slug: string
+  body: string
+  author_id: string
+  status: 'draft' | 'published'
+  published_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface BlogComment {
+  id: string
+  post_id: string
+  user_id: string
+  parent_id: string | null
+  body: string
   created_at: string
 }
 

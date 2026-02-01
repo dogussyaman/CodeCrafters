@@ -103,13 +103,14 @@ export default function AdminCompaniesPage() {
                                         <TableHead>Sektör</TableHead>
                                         <TableHead>Çalışan Sayısı</TableHead>
                                         <TableHead>Konum</TableHead>
+                                        <TableHead>Plan</TableHead>
                                         <TableHead>Durum</TableHead>
                                         <TableHead className="text-right">İşlemler</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {Array.from({ length: 5 }).map((_, i) => (
-                                        <TableRowSkeleton key={i} columns={6} />
+                                        <TableRowSkeleton key={i} columns={7} />
                                     ))}
                                 </TableBody>
                             </Table>
@@ -130,6 +131,7 @@ export default function AdminCompaniesPage() {
                                         <TableHead>Sektör</TableHead>
                                         <TableHead>Çalışan Sayısı</TableHead>
                                         <TableHead>Konum</TableHead>
+                                        <TableHead>Plan</TableHead>
                                         <TableHead>Durum</TableHead>
                                         <TableHead className="text-right">İşlemler</TableHead>
                                     </TableRow>
@@ -141,6 +143,15 @@ export default function AdminCompaniesPage() {
                                             <TableCell>{company.industry || "-"}</TableCell>
                                             <TableCell>{company.employee_count || "-"}</TableCell>
                                             <TableCell>{company.location || "-"}</TableCell>
+                                            <TableCell>
+                                                {company.plan ? (
+                                                    <Badge variant="secondary" className="capitalize">
+                                                        {company.plan === "orta" ? "Orta" : company.plan === "premium" ? "Premium" : "Free"}
+                                                    </Badge>
+                                                ) : (
+                                                    "-"
+                                                )}
+                                            </TableCell>
                                             <TableCell>
                                                 <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
                                                     Aktif

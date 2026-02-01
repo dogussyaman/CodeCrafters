@@ -16,6 +16,7 @@ const navItems = [
   { href: "/is-ilanlari", label: "İş İlanları" },
   { href: "/isveren", label: "İşveren" },
   { href: "/iletisim", label: "İletişim" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export function ModernNavbar() {

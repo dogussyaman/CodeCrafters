@@ -81,6 +81,10 @@ export function ModernFooter() {
               {[
                 { label: "Ana Sayfa", href: "/" },
                 { label: "Hakkımızda", href: "/hakkimizda" },
+                { label: "Blog", href: "/blog" },
+                { label: "Yorumlar", href: "/yorumlar" },
+                { label: "Haberler", href: "/haberler" },
+                { label: "Terimler", href: "/terimler" },
                 { label: "Projeler", href: "/projeler" },
                 { label: "Topluluk", href: "/topluluk" },
                 { label: "Etkinlikler", href: "/etkinlikler" },

@@ -15,6 +15,7 @@ type CreateCompanyRequest = {
   address?: string
   phone?: string
   contactEmail?: string
+  plan?: "free" | "orta" | "premium"
   ownerFullName: string
   ownerEmail: string
   tempPassword?: string
@@ -49,8 +50,8 @@ export async function POST(request: Request) {
       .eq("id", currentUser.id)
       .single()
 
-    if (profileError || !profile || !["admin", "platform_admin"].includes(profile.role)) {
-      return NextResponse.json({ error: "Sadece admin kullanıcılar şirket oluşturabilir" }, { status: 403 })
+    if (profileError || !profile || !["admin", "platform_admin", "mt"].includes(profile.role)) {
+      return NextResponse.json({ error: "Sadece admin veya MT kullanıcılar şirket oluşturabilir" }, { status: 403 })
     }
 
     // Service-role client ile auth user oluştur
@@ -82,6 +83,9 @@ export async function POST(request: Request) {
 
     const ownerUserId = createdUser.user.id
 
+    const planValue =
+      body.plan === "orta" || body.plan === "premium" ? body.plan : "free"
+
     // create_company_with_owner RPC çağrısı
     const { data: rpcResult, error: rpcError } = await supabase.rpc("create_company_with_owner", {
       company_name: body.companyName,
@@ -101,6 +105,7 @@ export async function POST(request: Request) {
       company_address: body.address || null,
       company_phone: body.phone || null,
       company_contact_email: body.contactEmail || body.ownerEmail,
+      p_plan: planValue,
     })
 
     if (rpcError) {

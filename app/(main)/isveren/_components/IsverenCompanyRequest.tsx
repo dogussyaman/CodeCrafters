@@ -1,10 +1,11 @@
+import { Suspense } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Building2 } from "lucide-react"
 import { CreateCompanyRequestForm } from "@/components/company-request/create-company-request-form"
 
 export function IsverenCompanyRequest() {
   return (
-    <section className="py-20">
+    <section id="sirket-talebi" className="py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           <Card className="border-primary/20 shadow-lg">
@@ -18,7 +19,9 @@ export function IsverenCompanyRequest() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <CreateCompanyRequestForm />
+              <Suspense fallback={<p className="text-sm text-muted-foreground py-4">Yükleniyor...</p>}>
+                <CreateCompanyRequestForm />
+              </Suspense>
             </CardContent>
           </Card>
         </div>

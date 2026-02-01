@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Briefcase, Globe, Linkedin, Github, Twitter, MapPin, Mail, Phone, Edit2, Download, ExternalLink } from "lucide-react"
+import { Briefcase, Globe, Linkedin, Github, Twitter, MapPin, Mail, Phone, Edit2, Download, ExternalLink, BookOpen } from "lucide-react"
 import { ProfileForm } from "./profile-form"
 import { ProfileExperiences } from "./profile-experiences"
 import { ProfileEducations } from "./profile-educations"
@@ -60,6 +60,14 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
     .select("*")
     .eq("developer_id", user.id)
     .order("issue_date", { ascending: false })
+
+  const { data: blogPosts } = await supabase
+    .from("blog_posts")
+    .select("id, title, slug, published_at")
+    .eq("author_id", user.id)
+    .eq("status", "published")
+    .order("published_at", { ascending: false })
+    .limit(10)
 
   // Edit Mode
   if (isEditing) {
@@ -228,6 +236,35 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
                   ))
                 )}
               </div>
+            </section>
+
+            {/* Yazılar */}
+            <section>
+              <h3 className="text-lg font-semibold border-b pb-2 mb-4 flex items-center gap-2">
+                <BookOpen className="size-5 text-primary" />
+                Yazılar
+              </h3>
+              {!blogPosts?.length ? (
+                <p className="text-sm text-muted-foreground italic">Henüz yayınlanmış blog yazısı yok.</p>
+              ) : (
+                <ul className="space-y-2">
+                  {blogPosts.map((post) => (
+                    <li key={post.id}>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="text-primary hover:underline font-medium"
+                      >
+                        {post.title}
+                      </Link>
+                      <span className="text-muted-foreground text-sm ml-2">
+                        {post.published_at
+                          ? new Date(post.published_at).toLocaleDateString("tr-TR")
+                          : ""}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </section>
           </div>
         </div>

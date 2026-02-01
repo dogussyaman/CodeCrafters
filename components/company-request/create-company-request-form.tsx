@@ -1,20 +1,33 @@
 "use client"
 
 import { useForm } from "react-hook-form"
+import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { CheckCircle2, AlertCircle, Send, Building2 } from "lucide-react"
+import { CheckCircle2, AlertCircle, Send } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { companyRequestFormSchema, type CompanyRequestFormValues } from "@/lib/validations"
 import { useAuth } from "@/hooks/use-auth"
-import Link from "next/link"
+
+const PLAN_OPTIONS: { value: "free" | "orta" | "premium"; label: string }[] = [
+  { value: "free", label: "Free" },
+  { value: "orta", label: "Orta" },
+  { value: "premium", label: "Premium" },
+]
+
+function parsePlanParam(param: string | null): "free" | "orta" | "premium" {
+  if (param === "orta" || param === "premium" || param === "free") return param
+  return "free"
+}
 
 export function CreateCompanyRequestForm() {
   const { user, loading } = useAuth()
+  const searchParams = useSearchParams()
+  const planParam = parsePlanParam(searchParams.get("plan"))
 
   const {
     register,
@@ -33,6 +46,7 @@ export function CreateCompanyRequestForm() {
       contact_email: "",
       contact_phone: "",
       contact_address: "",
+      plan: planParam,
     },
   })
 
@@ -56,6 +70,7 @@ export function CreateCompanyRequestForm() {
         contact_email: data.contact_email?.trim() || null,
         contact_phone: data.contact_phone?.trim() || null,
         contact_address: data.contact_address?.trim() || null,
+        plan: data.plan ?? "free",
       })
 
       if (error) throw error
@@ -86,6 +101,26 @@ export function CreateCompanyRequestForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="space-y-2">
+        <Label>Plan</Label>
+        <div className="flex flex-wrap gap-4">
+          {PLAN_OPTIONS.map((opt) => (
+            <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                value={opt.value}
+                {...register("plan")}
+                className="rounded-full border-input"
+              />
+              <span className="text-sm">{opt.label}</span>
+            </label>
+          ))}
+        </div>
+        {errors.plan && (
+          <p className="text-sm text-destructive">{errors.plan.message}</p>
+        )}
+      </div>
+
       <div className="space-y-2">
         <Label htmlFor="company_name">
           Şirket adı <span className="text-destructive">*</span>

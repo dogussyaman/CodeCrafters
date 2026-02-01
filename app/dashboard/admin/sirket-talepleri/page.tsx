@@ -28,13 +28,13 @@ export default async function AdminSirketTalepleriPage() {
     .single()
 
   const role = profile?.role
-  if (role !== "admin" && role !== "platform_admin") {
+  if (role !== "admin" && role !== "platform_admin" && role !== "mt") {
     redirect("/dashboard/admin")
   }
 
   const { data: requests, error } = await supabase
     .from("company_requests")
-    .select("id, user_id, company_name, company_website, company_description, company_size, industry, reason, status, created_at, created_company_id")
+    .select("id, user_id, company_name, company_website, company_description, company_size, industry, reason, status, created_at, created_company_id, plan")
     .order("created_at", { ascending: false })
 
   if (error) {
@@ -81,6 +81,7 @@ export default async function AdminSirketTalepleriPage() {
             status: string
             created_at: string
             created_company_id: string | null
+            plan?: string | null
           }) => (
             <Card key={r.id}>
               <CardHeader className="flex flex-row items-start justify-between gap-4 flex-wrap">
@@ -92,6 +93,11 @@ export default async function AdminSirketTalepleriPage() {
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
+                  {r.plan && (
+                    <Badge variant="outline" className="capitalize">
+                      {r.plan === "orta" ? "Orta" : r.plan === "premium" ? "Premium" : "Free"}
+                    </Badge>
+                  )}
                   <Badge variant={r.status === "pending" ? "default" : "secondary"}>
                     {statusLabels[r.status] ?? r.status}
                   </Badge>

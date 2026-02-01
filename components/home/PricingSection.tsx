@@ -25,6 +25,7 @@ interface PlanFeature {
 
 interface PricingPlan {
     name: string
+    slug: "free" | "orta" | "premium"
     description: string
     monthlyPrice: number
     yearlyPrice: number
@@ -37,6 +38,7 @@ interface PricingPlan {
 const plans: PricingPlan[] = [
     {
         name: "Free",
+        slug: "free",
         description: "Bireyler ve küçük projeler için ideal",
         monthlyPrice: 0,
         yearlyPrice: 0,
@@ -51,6 +53,7 @@ const plans: PricingPlan[] = [
     },
     {
         name: "Orta",
+        slug: "orta",
         description: "Büyüyen takımlar ve işletmeler için ideal",
         monthlyPrice: 35,
         yearlyPrice: 28,
@@ -67,6 +70,7 @@ const plans: PricingPlan[] = [
     },
     {
         name: "Premium",
+        slug: "premium",
         description: "Büyük kurumlar ve ileri düzey ihtiyaçlar için",
         monthlyPrice: 100,
         yearlyPrice: 80,
@@ -88,11 +92,13 @@ function PricingCard({
     billingPeriod,
     delay,
     isCurrentPlan,
+    ctaLink,
 }: {
     plan: PricingPlan
     billingPeriod: BillingPeriod
     delay: number
     isCurrentPlan?: boolean
+    ctaLink: string
 }) {
     const price = billingPeriod === "monthly" ? plan.monthlyPrice : plan.yearlyPrice
     const isHighlighted = plan.popular || isCurrentPlan
@@ -158,7 +164,7 @@ function PricingCard({
                                 : "bg-muted text-foreground hover:bg-muted/80"
                         )}
                     >
-                        <Link href={plan.ctaLink}>{plan.cta}</Link>
+                        <Link href={ctaLink}>{plan.cta}</Link>
                     </Button>
 
                     {/* Features */}
@@ -197,11 +203,27 @@ function PricingCard({
 
 const companyRoles = ["company", "company_admin", "hr"] as const
 
-export function PricingSection() {
+export function PricingSection({
+    ctaPathPrefix,
+    ctaHashAnchor,
+}: {
+    /** When set, CTA links become {ctaPathPrefix}?plan={slug}{#ctaHashAnchor}. E.g. "/isveren" for employer page. */
+    ctaPathPrefix?: string
+    /** Optional hash anchor for CTA links, e.g. "sirket-talebi". */
+    ctaHashAnchor?: string
+} = {}) {
     const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("annually")
     const { role } = useAuth()
     const isCompanyOrEmployee = role && companyRoles.includes(role as (typeof companyRoles)[number])
     const freePlanIsCurrent = isCompanyOrEmployee
+
+    const getCtaLink = (plan: PricingPlan) => {
+        if (ctaPathPrefix) {
+            const base = `${ctaPathPrefix}?plan=${plan.slug}`
+            return ctaHashAnchor ? `${base}#${ctaHashAnchor}` : base
+        }
+        return plan.ctaLink
+    }
 
     return (
         <section id="ucretlendirme" className="container mx-auto px-4 py-20 md:py-32">
@@ -269,6 +291,7 @@ export function PricingSection() {
                         billingPeriod={billingPeriod}
                         delay={idx * 0.1}
                         isCurrentPlan={plan.name === "Free" ? freePlanIsCurrent : undefined}
+                        ctaLink={getCtaLink(plan)}
                     />
                 ))}
             </div>

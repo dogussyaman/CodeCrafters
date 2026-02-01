@@ -2,22 +2,17 @@
 
 import { useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useAuth } from "@/hooks/use-auth"
 import {
   HeroSection,
   FeaturesSection,
-  PricingSection,
   HowItWorksSection,
+  ContributorsSection,
   CTASection,
-  HomeMarquee,
 } from "@/components/home"
-
-const ROLES_HIDE_PRICING = ["admin", "platform_admin", "developer", "mt"] as const
 
 function HomeContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { user, role } = useAuth()
 
   useEffect(() => {
     const code = searchParams.get("code")
@@ -32,11 +27,6 @@ function HomeContent() {
     }
   }, [searchParams, router])
 
-  const hidePricingSection =
-    user &&
-    role &&
-    ROLES_HIDE_PRICING.includes(role as (typeof ROLES_HIDE_PRICING)[number])
-
   return (
     <div className="min-h-screen">
       {/* Background Effects are now handled globally in layout.tsx */}
@@ -45,8 +35,7 @@ function HomeContent() {
         <HeroSection />
         <FeaturesSection />
         <HowItWorksSection />
-        <HomeMarquee />
-        {!hidePricingSection && <PricingSection />}
+        <ContributorsSection />
         <CTASection />
       </main>
     </div>

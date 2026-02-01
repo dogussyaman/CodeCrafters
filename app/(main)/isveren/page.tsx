@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Separator } from "@/components/ui/separator"
+import { PricingSection } from "@/components/home/PricingSection"
 import { IsverenHero } from "./_components/IsverenHero"
 import { IsverenBenefits } from "./_components/IsverenBenefits"
 import { IsverenHowItWorks } from "./_components/IsverenHowItWorks"
@@ -24,6 +25,8 @@ export default function IsverenPage() {
       <IsverenFeatures />
       <Separator className="max-w-6xl mx-auto" />
       <IsverenStats />
+      <Separator className="max-w-6xl mx-auto" />
+      <PricingSection ctaPathPrefix="/isveren" ctaHashAnchor="sirket-talebi" />
       <Separator className="max-w-6xl mx-auto" />
       <IsverenCompanyRequest />
       <Separator className="max-w-6xl mx-auto" />

@@ -11,7 +11,7 @@ export function ProjectsSubmitCta() {
                         Geliştirdiğiniz açık kaynak projeleri topluluğumuzla paylaşmak için başvurun
                     </p>
                     <Button size="lg" asChild>
-                        <Link href="/iletisim">Proje Gönder</Link>
+                        <Link href="/dashboard/gelistirici/projelerim/yeni">Proje Gönder</Link>
                     </Button>
                 </div>
             </div>
