@@ -1,4 +1,14 @@
 <p align="center">
+  <img src="public/logo.svg" alt="CodeCrafters" width="96" height="96" />
+</p>
+
+<h1 align="center">CodeCrafters</h1>
+
+<p align="center">
+  <strong>Yetenek ve Fırsatları Akıllıca Buluşturan Yeni Nesil HR Platformu</strong>
+</p>
+
+<p align="center">
   <img src="public/hero.png" alt="CodeCrafters ana sayfa" width="100%" />
 </p>
 
@@ -16,9 +26,9 @@ CodeCrafters, geliştiricileri CV analizi ve beceri eşleştirme algoritması il
 
 ---
 
-## CodeCrafters Hakkında
+## 🎯 CodeCrafters Hakkında
 
-### Değer Önerimiz
+### 💡 Değer Önerimiz
 
 CodeCrafters, yetenek ile fırsatı doğru eşleştirmeyi hedefler. Geliştiricilerin becerileri ve deneyimi, işverenlerin aradığı profillerle otomatik ve şeffaf biçimde eşleştirilir. Böylece hem adaylar en uygun iş ilanlarına kısa sürede ulaşır hem de işverenler doğru yeteneklere daha verimli erişir.
 
@@ -28,37 +38,37 @@ Bu bölümde teknik detaylara girilmez; odak noktamız ürünün hedefi ve kulla
 
 ---
 
-## Kime Hitap Ediyoruz
+## 👥 Kime Hitap Ediyoruz
 
-### Geliştiriciler
+### 👩‍💻 Geliştiriciler
 
 CodeCrafters, yazılım geliştiricilerin kariyer yolculuğunu kolaylaştırır. Platformda profil ve CV oluşturabilir, yeteneklerinizi ekleyebilir ve eşleşen iş ilanlarını tek ekrandan takip edebilirsiniz. Yapay zeka destekli eşleştirme, sizin için uygun fırsatları öne çıkarır. İş ilanlarına tek tıkla başvurabilir, projelerinizi paylaşabilir ve blog yazılarıyla görünürlüğünüzü artırabilirsiniz. Başvurularınız ve eşleşmeleriniz merkezi bir panelden yönetilir.
 
-### İşverenler ve İnsan Kaynakları
+### 🏢 İşverenler ve İnsan Kaynakları
 
 Şirketler ve İK ekipleri CodeCrafters üzerinden şirket kaydı oluşturup iş ilanı açabilir. Platform, ilan kriterlerinize uygun adayları beceri ve deneyim bazında eşleştirir. Eşleşen adayları liste halinde görür, başvuruları tek yerden değerlendirir ve süreci hızlandırırsınız. Rol bazlı yetkilendirme ile farklı ekip üyeleri kendi alanlarına uygun işlemleri yapabilir.
 
-### Platform Yönetimi
+### ⚙️ Platform Yönetimi
 
 CodeCrafters, geliştirici, İK, şirket ve platform yöneticisi rolleriyle çok katmanlı bir yapı sunar. Her rol kendi paneline erişir; canlı destek sohbeti ve destek talepleri ile kullanıcılar yardım alabilir. Güvenlik ve gizlilik, rol bazlı erişim ve güvenli kimlik doğrulama ile sağlanır.
 
 ---
 
-## Öne Çıkan Özellikler
+## ✨ Öne Çıkan Özellikler
 
-| Alan | Açıklama |
-|------|----------|
-| **Kimlik ve güvenlik** | Güvenli giriş, kayıt ve sosyal giriş (Google vb.) ile tek hesap üzerinden platform kullanımı. |
-| **Roller** | Geliştirici, İK, Şirket ve Platform Admin — her rol için ayrı dashboard ve yetkiler. |
-| **Eşleştirme** | Yapay zeka destekli yetenek–ilan eşleştirme; geliştiriciler uygun fırsatları, işverenler uygun adayları görür. |
-| **Destek** | Canlı destek sohbeti ve destek talepleri ile kullanıcılar hızlı yanıt alır. |
-| **Arayüz** | Modern, erişilebilir ve mobil uyumlu arayüz; karanlık mod desteği. |
-| **Formlar ve doğrulama** | Tüm formlar tutarlı doğrulama kuralları ile güvenli ve hatasız veri girişi sağlar. |
-| **Blog ve projeler** | Geliştiriciler blog yazısı yayınlayabilir, proje ekleyebilir ve proje katılım isteği gönderebilir. |
+|  | Alan | Açıklama |
+|:---:|---|----------|
+| 🔐 | **Kimlik ve güvenlik** | Güvenli giriş, kayıt ve sosyal giriş (Google vb.) ile tek hesap üzerinden platform kullanımı. |
+| 👤 | **Roller** | Geliştirici, İK, Şirket ve Platform Admin — her rol için ayrı dashboard ve yetkiler. |
+| 🎯 | **Eşleştirme** | Yapay zeka destekli yetenek–ilan eşleştirme; geliştiriciler uygun fırsatları, işverenler uygun adayları görür. |
+| 💬 | **Destek** | Canlı destek sohbeti ve destek talepleri ile kullanıcılar hızlı yanıt alır. |
+| 🎨 | **Arayüz** | Modern, erişilebilir ve mobil uyumlu arayüz; karanlık mod desteği. |
+| 📝 | **Formlar ve doğrulama** | Tüm formlar tutarlı doğrulama kuralları ile güvenli ve hatasız veri girişi sağlar. |
+| 📄 | **Blog ve projeler** | Geliştiriciler blog yazısı yayınlayabilir, proje ekleyebilir ve proje katılım isteği gönderebilir. |
 
 ---
 
-## Nasıl Çalışır
+## 🔄 Nasıl Çalışır
 
 CodeCrafters’ta akış iki ana taraf etrafında şekillenir: **geliştirici** ve **işveren**. Geliştirici kayıt olur, CV ve profilini doldurur, yeteneklerini ekler. Platform bu bilgileri kullanarak uygun iş ilanlarıyla eşleştirme yapar. Geliştirici eşleşen ilanlara başvurabilir; ayrıca blog yazıları yazabilir ve projelerini paylaşabilir. İşveren tarafında şirket kaydı yapılır, iş ilanı açılır; platform eşleşen adayları listeler ve başvurular buradan yönetilir. Süreç özetle: **İş ilanı açma → Eşleşme → Başvuru → Değerlendirme**.
 
@@ -89,7 +99,7 @@ flowchart LR
 
 ---
 
-## Teknoloji
+## 🛠️ Teknoloji
 
 CodeCrafters, modern web teknolojileri ile geliştirilmiştir. Ana mesaj ve ürün hedefi ön planda tutulmuş; aşağıda kullandığımız teknik altyapı özetlenmiştir.
 
@@ -111,7 +121,7 @@ CodeCrafters, modern web teknolojileri ile geliştirilmiştir. Ana mesaj ve ür�
 
 ---
 
-## Hızlı Başlangıç
+## 🚀 Hızlı Başlangıç
 
 Projeyi yerel ortamda çalıştırmak için aşağıdaki adımları izleyin.
 
@@ -125,7 +135,7 @@ npm run dev
 
 Tarayıcıda **http://localhost:3000** adresini açın.
 
-### Ortam Değişkenleri
+### 🔑 Ortam Değişkenleri
 
 | Değişken | Açıklama |
 |----------|----------|
@@ -135,7 +145,7 @@ Tarayıcıda **http://localhost:3000** adresini açın.
 
 ---
 
-## Komutlar
+## 📋 Komutlar
 
 | Komut | Açıklama |
 |-------|----------|
@@ -146,7 +156,7 @@ Tarayıcıda **http://localhost:3000** adresini açın.
 
 ---
 
-## Proje Yapısı
+## 📁 Proje Yapısı
 
 ```
 CodeCrafters/
@@ -164,6 +174,6 @@ CodeCrafters/
 
 ---
 
-## Lisans
+## 📄 Lisans
 
 [MIT](LICENSE)
