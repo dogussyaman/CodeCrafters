@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { createServerClient } from "@/lib/supabase/server"
+import { sanitizeHtml } from "@/lib/sanitize"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ArrowLeft, FileText } from "lucide-react"
@@ -82,7 +83,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </header>
           <div
             className="prose prose-lg prose-neutral dark:prose-invert max-w-none prose-headings:font-bold prose-p:leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: post.body.replace(/\n/g, "<br />") }}
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtml(post.body.replace(/\n/g, "<br />")),
+            }}
           />
         </article>
 

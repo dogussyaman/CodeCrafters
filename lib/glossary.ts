@@ -18,6 +18,46 @@ export interface GlossaryTerm {
 
 const TERMS = terimlerData as GlossaryTerm[]
 
+/** Türkçe alfabe (alfabetik filtre barı ve URL validasyonu için) */
+export const TURKISH_ALPHABET = [
+  "A", "B", "C", "D", "E", "F", "G", "H", "I", "İ", "J", "K", "L", "M",
+  "N", "O", "Ö", "P", "R", "S", "Ş", "T", "U", "Ü", "V", "Y", "Z",
+] as const
+
+export type TurkishLetter = (typeof TURKISH_ALPHABET)[number]
+
+const ALLOWED_LETTERS_SET = new Set<string>(TURKISH_ALPHABET)
+
+export const TERMS_BASE_PATH = "/terimler"
+export const EMPTY_TERMS_MESSAGE = "Bu harfle başlayan terim bulunamadı"
+
+/** URL'den gelen harf parametresinin geçerli olup olmadığını kontrol eder */
+export function isValidLetter(value: unknown): value is TurkishLetter {
+  if (typeof value !== "string") return false
+  const normalized = value.trim().toUpperCase()
+  if (normalized.length !== 1) return false
+  return ALLOWED_LETTERS_SET.has(normalized)
+}
+
+/** Harfi normalize eder (büyük harf); geçersizse null */
+export function normalizeLetter(value: unknown): TurkishLetter | null {
+  if (!isValidLetter(value)) return null
+  return value.trim().toUpperCase() as TurkishLetter
+}
+
+/** Terimin ilk harfini Türkçe uyumlu büyük harf olarak döner */
+function firstLetter(t: GlossaryTerm): string {
+  return t.term.trim().charAt(0).toLocaleUpperCase("tr-TR")
+}
+
+/** Belirtilen harfle başlayan terimleri döner (Türkçe İ/I uyumlu) */
+export function getTermsByLetter(letter: string): GlossaryTerm[] {
+  const upper = letter.trim().toUpperCase()
+  return GLOSSARY_TERMS.filter((t) => firstLetter(t) === upper).sort((a, b) =>
+    a.term.localeCompare(b.term, "tr")
+  )
+}
+
 // Dinamik kategoriler: JSON'daki unique category değerleri (Türkçe)
 const categorySet = new Set(TERMS.map((t) => t.category))
 export const GLOSSARY_CATEGORIES: { id: string; label: string }[] = Array.from(categorySet)
@@ -29,7 +69,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = TERMS
 export function getGlossaryByLetter(): Record<string, GlossaryTerm[]> {
   const byLetter: Record<string, GlossaryTerm[]> = {}
   for (const t of GLOSSARY_TERMS) {
-    const letter = t.term[0].toUpperCase()
+    const letter = firstLetter(t)
     if (!byLetter[letter]) byLetter[letter] = []
     byLetter[letter].push(t)
   }

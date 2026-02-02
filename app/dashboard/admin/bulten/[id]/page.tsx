@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
+import { sanitizeHtml } from "@/lib/sanitize"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -151,7 +152,7 @@ export default function AdminBultenDetailPage() {
               <p className="text-sm font-medium text-muted-foreground mb-1">Detay</p>
               <div
                 className="rounded-lg border border-border p-4 bg-muted/30 text-sm prose prose-sm dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: campaign.body_html }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(campaign.body_html ?? "") }}
               />
             </div>
           )}

@@ -10,14 +10,55 @@ import { ThemeToggle } from "./theme-toggle";
 import { Logo } from "./logo";
 import { useAuth } from "@/hooks/use-auth";
 
+/** Ana navigasyon linkleri. Projeler, Terimler vb. footer'da. */
 const navItems = [
   { href: "/hakkimizda", label: "Hakkımızda" },
-  { href: "/projeler", label: "Projeler" },
   { href: "/is-ilanlari", label: "İş İlanları" },
   { href: "/isveren", label: "İşveren" },
-  { href: "/iletisim", label: "İletişim" },
   { href: "/blog", label: "Blog" },
+  { href: "/iletisim", label: "İletişim" },
 ];
+
+function NavLink({
+  href,
+  label,
+  active,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+}) {
+  const [hover, setHover] = useState(false);
+  const showUnderline = active || hover;
+
+  return (
+    <motion.div
+      className="relative"
+      onHoverStart={() => setHover(true)}
+      onHoverEnd={() => setHover(false)}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <Link
+        href={href}
+        className={`relative z-10 block px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-md ${
+          active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        {label}
+      </Link>
+      <motion.span
+        className="absolute left-0 -bottom-px h-0.5 bg-primary rounded-full origin-left"
+        initial={false}
+        animate={{ width: showUnderline ? "100%" : "0%" }}
+        transition={{ type: "spring", damping: 28, stiffness: 300 }}
+        style={{
+          boxShadow: showUnderline ? "0 2px 10px rgba(168,85,247,0.35)" : "none",
+        }}
+      />
+    </motion.div>
+  );
+}
 
 export function ModernNavbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -61,45 +102,41 @@ export function ModernNavbar() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+      transition={{ type: "spring", damping: 24, stiffness: 200 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
           ? "bg-background/80 backdrop-blur-xl border-b border-border/50"
           : "bg-transparent"
-        }`}
+      }`}
     >
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-[auto_1fr_auto] items-center h-16 gap-4">
-          {/* Logo */}
-          {/* Logo */}
-          <Logo />
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-14 sm:h-16 gap-2 min-w-0">
+          <div className="shrink-0">
+            <Logo />
+          </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center justify-center gap-6">
+          {/* Desktop Navigation - ortada, sadece md+ */}
+          <nav
+            className="hidden md:flex items-center justify-center flex-1 gap-1 min-w-0"
+            aria-label="Ana menü"
+          >
             {navItems.map((item) => {
               const active = isActive(item.href);
               return (
-                <Link
+                <NavLink
                   key={item.href}
                   href={item.href}
-                  className={`text-sm transition-colors relative group pb-1 ${active ? "text-foreground font-bold" : "text-muted-foreground hover:text-foreground"
-                    }`}
-                >
-                  {item.label}
-                  {/* Alt çizgi - aktif veya hover; gölge çizginin kendisinde */}
-                  <span
-                    className={`absolute left-0 h-0.5 bg-primary transition-all ${active
-                        ? "w-full -bottom-0.5 shadow-[0_3px_8px_rgba(168,85,247,0.45)]"
-                        : "w-0 -bottom-0.5 group-hover:w-full group-hover:shadow-[0_3px_8px_rgba(168,85,247,0.35)]"
-                      }`}
-                  />
-                </Link>
+                  label={item.label}
+                  active={active}
+                />
               );
             })}
           </nav>
 
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Desktop Actions - sadece md+ */}
+          <div className="hidden md:flex items-center gap-2 shrink-0">
             <ThemeToggle />
-            <div className="h-6 w-px bg-border/50 mx-1" />
+            <div className="h-5 w-px bg-border/50" />
             {loading ? (
               <div className="flex items-center gap-2">
                 <div className="h-9 w-24 rounded-md bg-muted/60 animate-pulse" />
@@ -111,6 +148,7 @@ export function ModernNavbar() {
                   <>
                     <Button
                       variant="outline"
+                      size="sm"
                       asChild
                       className="rounded-lg border-border hover:bg-muted/50 hover:text-foreground gap-2 transition-colors"
                     >
@@ -121,6 +159,7 @@ export function ModernNavbar() {
                     </Button>
                     <Button
                       variant="outline"
+                      size="sm"
                       onClick={handleLogout}
                       className="rounded-lg border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 gap-2 transition-colors"
                     >
@@ -132,20 +171,18 @@ export function ModernNavbar() {
                   <>
                     <Button
                       variant="outline"
+                      size="sm"
                       asChild
-                      className="border-border/60 hover:text-gray-600 dark:hover:text-white hover:border-border hover:bg-muted/50 text-foreground transition-colors"
+                      className="border-border/60 hover:text-foreground hover:border-border hover:bg-muted/50 text-foreground transition-colors"
                     >
                       <Link href="/auth/giris">Giriş Yap</Link>
                     </Button>
                     <Button
+                      size="sm"
                       asChild
-                      className="relative overflow-hidden from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-sm hover:shadow transition-all duration-200"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow transition-all duration-200"
                     >
-                      <Link href="/auth/kayit">
-                        <span className="relative z-10 font-medium">
-                          Başlayın
-                        </span>
-                      </Link>
+                      <Link href="/auth/kayit">Başlayın</Link>
                     </Button>
                   </>
                 )}
@@ -153,52 +190,73 @@ export function ModernNavbar() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-foreground p-2 hover:bg-muted/50 rounded-lg transition-colors active:bg-muted"
-          >
-            {isMobileMenuOpen ? (
-              <X className="size-6" />
-            ) : (
-              <Menu className="size-6" />
-            )}
-          </button>
+          {/* Mobile Menu Button - sadece mobil */}
+          <div className="flex md:hidden items-center gap-2 shrink-0">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-foreground p-2.5 -mr-2 hover:bg-muted/50 rounded-lg transition-colors active:bg-muted touch-manipulation"
+              aria-expanded={isMobileMenuOpen}
+              aria-label={isMobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+            >
+              <motion.div
+                animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="size-6" />
+                ) : (
+                  <Menu className="size-6" />
+                )}
+              </motion.div>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - tam genişlik, animasyonlu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl"
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl overflow-hidden"
           >
-            <div className="container mx-auto px-4 py-6 space-y-4">
-              {navItems.map((item) => {
+            <nav
+              className="container mx-auto px-4 py-4 space-y-1"
+              aria-label="Mobil menü"
+            >
+              {navItems.map((item, index) => {
                 const active = isActive(item.href);
                 return (
-                  <Link
+                  <motion.div
                     key={item.href}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block transition-colors py-2 ${active ? "text-foreground font-bold" : "text-muted-foreground hover:text-foreground"
-                      }`}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.04 }}
                   >
-                    {item.label}
-                  </Link>
+                    <Link
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
+                        active
+                          ? "text-foreground bg-primary/10"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
                 );
               })}
-              <div className="pt-4 space-y-4 border-t border-border/50">
-                <div className="flex items-center justify-between px-2">
-                  <ThemeToggle />
-                </div>
+              <div className="pt-4 mt-4 space-y-2 border-t border-border/50">
                 {loading ? (
                   <div className="space-y-2">
-                    <div className="h-11 w-full rounded-md bg-muted/60 animate-pulse" />
-                    <div className="h-11 w-full rounded-md bg-muted/60 animate-pulse" />
+                    <div className="h-11 w-full rounded-lg bg-muted/60 animate-pulse" />
+                    <div className="h-11 w-full rounded-lg bg-muted/60 animate-pulse" />
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -207,7 +265,7 @@ export function ModernNavbar() {
                         <Button
                           variant="outline"
                           asChild
-                          className="w-full justify-start gap-2 h-11 rounded-lg border-border hover:bg-muted/50 transition-colors"
+                          className="w-full justify-center gap-2 h-11 rounded-lg"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <Link href={getDashboardLink()}>
@@ -218,7 +276,7 @@ export function ModernNavbar() {
                         <Button
                           variant="outline"
                           onClick={handleLogout}
-                          className="w-full justify-start gap-2 h-11 rounded-lg border-border text-destructive hover:bg-destructive/10 hover:border-destructive/50 transition-colors"
+                          className="w-full justify-center gap-2 h-11 rounded-lg text-destructive hover:bg-destructive/10 hover:border-destructive/50"
                         >
                           <LogOut className="size-4" />
                           Çıkış Yap
@@ -229,14 +287,14 @@ export function ModernNavbar() {
                         <Button
                           variant="outline"
                           asChild
-                          className="w-full h-11 border-border/60 hover:border-border hover:bg-muted/50 text-foreground transition-colors"
+                          className="w-full h-11 rounded-lg"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <Link href="/auth/giris">Giriş Yap</Link>
                         </Button>
                         <Button
                           asChild
-                          className="w-full h-11 from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-sm hover:shadow transition-all duration-200"
+                          className="w-full h-11 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           <Link href="/auth/kayit">Başlayın</Link>
@@ -246,7 +304,7 @@ export function ModernNavbar() {
                   </div>
                 )}
               </div>
-            </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>

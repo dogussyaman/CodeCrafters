@@ -20,7 +20,7 @@ export function GlossarySearch() {
     const params = new URLSearchParams()
     if (value) params.set("q", value)
     startTransition(() => {
-      router.push(value ? `/terimler?${params.toString()}` : "/terimler")
+      router.push(value ? `/terimler?${params.toString()}` : "/terimler/a")
     })
   }
 
