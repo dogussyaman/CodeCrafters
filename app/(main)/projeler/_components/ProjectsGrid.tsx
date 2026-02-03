@@ -24,55 +24,53 @@ export function ProjectsGrid({ projeler }: ProjectsGridProps) {
                                     key={proje.id}
                                     className="group hover:shadow-lg transition-all duration-300 hover:border-primary/50"
                                 >
-                                    <Link href={`/projeler/${proje.id}`}>
-                                        <CardHeader>
-                                            <CardTitle className="group-hover:text-primary transition-colors">
-                                                {proje.title}
-                                            </CardTitle>
-                                            <CardDescription>{proje.description}</CardDescription>
-                                        </CardHeader>
-                                        <CardContent className="space-y-4">
-                                            <div className="flex flex-wrap gap-2">
-                                                {teknolojiler.slice(0, 4).map((tek: string) => (
-                                                    <Badge key={tek} variant="secondary" className="text-xs">
-                                                        {tek}
-                                                    </Badge>
-                                                ))}
+                                    <CardHeader>
+                                        <CardTitle className="group-hover:text-primary transition-colors">
+                                            <Link href={`/projeler/${proje.id}`}>{proje.title}</Link>
+                                        </CardTitle>
+                                        <CardDescription>{proje.description}</CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        <div className="flex flex-wrap gap-2">
+                                            {teknolojiler.slice(0, 4).map((tek: string, i: number) => (
+                                                <Badge key={`${proje.id}-tech-${i}`} variant="secondary" className="text-xs">
+                                                    {tek}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                            <div className="flex items-center gap-1">
+                                                <Heart className="size-4" />
+                                                <span>{proje.stars?.toLocaleString("tr-TR") || 0}</span>
                                             </div>
-                                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                                <div className="flex items-center gap-1">
-                                                    <Heart className="size-4" />
-                                                    <span>{proje.stars?.toLocaleString("tr-TR") || 0}</span>
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    <Eye className="size-4" />
-                                                    <span>{proje.views?.toLocaleString("tr-TR") || 0}</span>
-                                                </div>
+                                            <div className="flex items-center gap-1">
+                                                <Eye className="size-4" />
+                                                <span>{proje.views?.toLocaleString("tr-TR") || 0}</span>
                                             </div>
-                                            <div className="flex gap-2 pt-2">
-                                                {proje.github_url && (
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        className="flex-1 bg-transparent"
-                                                        asChild
+                                        </div>
+                                        <div className="flex gap-2 pt-2">
+                                            {proje.github_url && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="flex-1 bg-transparent"
+                                                    asChild
+                                                >
+                                                    <a
+                                                        href={proje.github_url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
                                                     >
-                                                        <a
-                                                            href={proje.github_url}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                        >
-                                                            <Github className="size-4 mr-2" />
-                                                            GitHub
-                                                        </a>
-                                                    </Button>
-                                                )}
-                                                <Button size="sm" className="flex-1">
-                                                    Detay
+                                                        <Github className="size-4 mr-2" />
+                                                        GitHub
+                                                    </a>
                                                 </Button>
-                                            </div>
-                                        </CardContent>
-                                    </Link>
+                                            )}
+                                            <Button size="sm" className="flex-1" asChild>
+                                                <Link href={`/projeler/${proje.id}`}>Detay</Link>
+                                            </Button>
+                                        </div>
+                                    </CardContent>
                                 </Card>
                             )
                         })

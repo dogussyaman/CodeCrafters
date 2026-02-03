@@ -1,7 +1,8 @@
 "use client"
 
-import { useActionState, useEffect } from "react"
+import { useActionState, useEffect, useRef, useState } from "react"
 import { useFormStatus } from "react-dom"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -9,13 +10,26 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, Loader2 } from "lucide-react"
-import { createProject, updateProject, type ProjectFormState } from "../actions"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { ArrowLeft, Loader2, ImagePlus, X } from "lucide-react"
+import { createProject, updateProject, uploadProjectImage, type ProjectFormState } from "../actions"
 import { toast } from "sonner"
 
 interface ProjectFormProps {
   mode: "create" | "edit"
   projectId?: string
+  /** Create sayfasında tam sayfa layout kullanıldığında Card sarmalayıcı kaldırılır */
+  noCard?: boolean
+  /** Create başarılı olunca yönlendirilecek path (admin için /dashboard/admin/projeler) */
+  redirectBasePath?: string
+  /** Geri / İptal linki (admin için /dashboard/admin/projeler) */
+  listPath?: string
   initialValues?: {
     title: string
     description: string
@@ -23,62 +37,142 @@ interface ProjectFormProps {
     technologies: string[]
     github_url?: string | null
     demo_url?: string | null
+    image_url?: string | null
     category?: string | null
     inspired_by?: string | null
     status: string
   }
 }
 
-function SubmitButton() {
+function SubmitButton({ status }: { status: string }) {
   const { pending } = useFormStatus()
+  const isPublish = status === "published"
+  const label = pending
+    ? isPublish
+      ? "Yayınlanıyor..."
+      : "Kaydediliyor..."
+    : isPublish
+      ? "Yayınla"
+      : "Kaydet"
   return (
     <Button type="submit" disabled={pending} className="gap-2">
       {pending && <Loader2 className="size-4 animate-spin" />}
-      {pending ? "Kaydediliyor..." : "Kaydet"}
+      {label}
     </Button>
   )
 }
 
-export function ProjectForm({ mode, projectId, initialValues }: ProjectFormProps) {
+const defaultListPath = "/dashboard/gelistirici/projelerim"
+
+export function ProjectForm({ mode, projectId, initialValues, noCard, redirectBasePath, listPath = defaultListPath }: ProjectFormProps) {
   const router = useRouter()
+  const [imageUrl, setImageUrl] = useState(initialValues?.image_url ?? "")
+  const [status, setStatus] = useState(initialValues?.status ?? "draft")
   const action =
     mode === "create"
       ? createProject
       : (prev: ProjectFormState, fd: FormData) => updateProject(projectId!, prev, fd)
 
   const [state, formAction] = useActionState(action, { ok: false })
+  const [uploadState, uploadFormAction] = useActionState(uploadProjectImage, { ok: false })
+  const [isUploading, setIsUploading] = useState(false)
+  const uploadFormRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
     if (state.ok) {
       toast.success(mode === "create" ? "Proje eklendi" : "Proje güncellendi")
-      if (mode === "create") router.push("/dashboard/gelistirici/projelerim")
-      else router.refresh()
+      if (mode === "create") {
+        const path = redirectBasePath ?? "/dashboard/gelistirici/projelerim"
+        window.location.href = path
+      } else {
+        router.refresh()
+      }
     } else if (state.error) {
       toast.error(state.error)
     }
-  }, [state, mode, router])
+  }, [state, mode, router, redirectBasePath])
 
-  return (
-    <Card>
-      <CardHeader>
+  useEffect(() => {
+    setIsUploading(false)
+    if (uploadState.ok && uploadState.url) {
+      setImageUrl(uploadState.url)
+      toast.success("Görsel yüklendi")
+    } else if (uploadState.error) {
+      toast.error(uploadState.error)
+    }
+  }, [uploadState])
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file?.size) return
+    setIsUploading(true)
+    uploadFormRef.current?.requestSubmit()
+  }
+
+  const header = (
+    <div className={noCard ? "mb-6" : undefined}>
+      {!noCard && (
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link href="/dashboard/gelistirici/projelerim">
+            <Link href={listPath}>
               <ArrowLeft className="size-4" />
             </Link>
           </Button>
-          <div>
-            <CardTitle>{mode === "create" ? "Yeni Proje" : "Projeyi Düzenle"}</CardTitle>
-            <CardDescription>
-              {mode === "create"
-                ? "Proje bilgilerini girin. Taslak olarak kaydedip sonra yayınlayabilirsiniz."
-                : "Proje bilgilerini güncelleyin."}
-            </CardDescription>
-          </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        <form action={formAction} className="space-y-6">
+      )}
+      <div className={noCard ? undefined : "mt-2"}>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {mode === "create" ? "Yeni Proje" : "Projeyi Düzenle"}
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {mode === "create"
+            ? "Proje bilgilerini girin. Taslak olarak kaydedip sonra yayınlayabilirsiniz."
+            : "Proje bilgilerini güncelleyin."}
+        </p>
+      </div>
+    </div>
+  )
+
+  const formContent = (
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <Label>Proje görseli (opsiyonel)</Label>
+        {imageUrl ? (
+          <div className="flex items-start gap-3">
+            <div className="relative size-24 overflow-hidden rounded-lg border bg-muted shrink-0">
+              <Image src={imageUrl} alt="Proje görseli" fill className="object-cover" sizes="96px" />
+            </div>
+            <Button type="button" variant="outline" size="sm" className="gap-1" onClick={() => setImageUrl("")}>
+              <X className="size-3.5" />
+              Kaldır
+            </Button>
+          </div>
+        ) : (
+          <form ref={uploadFormRef} action={uploadFormAction} className="flex flex-wrap items-center gap-2">
+            <input
+              type="file"
+              name="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="text-sm file:mr-2 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-primary-foreground file:text-sm"
+              onChange={handleFileChange}
+            />
+            {isUploading && (
+              <span className="text-sm text-muted-foreground flex items-center gap-1">
+                <Loader2 className="size-4 animate-spin" />
+                Yükleniyor…
+              </span>
+            )}
+            <span className="text-xs text-muted-foreground">Dosya seçildiğinde otomatik yüklenir</span>
+          </form>
+        )}
+      </div>
+      <form action={formAction} className="space-y-6">
+          {state.error && (
+            <div className="rounded-md bg-destructive/10 text-destructive text-sm p-3" role="alert">
+              {state.error}
+            </div>
+          )}
+          <input type="hidden" name="image_url" value={imageUrl} />
           <div className="space-y-2">
             <Label htmlFor="title">Başlık *</Label>
             <Input
@@ -162,24 +256,61 @@ export function ProjectForm({ mode, projectId, initialValues }: ProjectFormProps
             </div>
             <div className="space-y-2">
               <Label htmlFor="status">Durum</Label>
-              <select
-                id="status"
-                name="status"
-                defaultValue={initialValues?.status ?? "draft"}
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              <Select
+                value={status}
+                onValueChange={setStatus}
               >
-                <option value="draft">Taslak</option>
-                <option value="published">Yayınla</option>
-              </select>
+                <SelectTrigger id="status" className="w-full">
+                  <SelectValue placeholder="Durum seçin" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">Taslak</SelectItem>
+                  <SelectItem value="published">Yayınla</SelectItem>
+                </SelectContent>
+              </Select>
+              <input type="hidden" name="status" value={status} />
             </div>
           </div>
           <div className="flex gap-2">
-            <SubmitButton />
+            <SubmitButton status={status} />
             <Button type="button" variant="outline" asChild>
-              <Link href="/dashboard/gelistirici/projelerim">İptal</Link>
+              <Link href={listPath}>İptal</Link>
             </Button>
           </div>
         </form>
+    </div>
+  )
+
+  if (noCard) {
+    return (
+      <div>
+        {header}
+        {formContent}
+      </div>
+    )
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" asChild>
+            <Link href={listPath}>
+              <ArrowLeft className="size-4" />
+            </Link>
+          </Button>
+          <div>
+            <CardTitle>{mode === "create" ? "Yeni Proje" : "Projeyi Düzenle"}</CardTitle>
+            <CardDescription>
+              {mode === "create"
+                ? "Proje bilgilerini girin. Taslak olarak kaydedip sonra yayınlayabilirsiniz."
+                : "Proje bilgilerini güncelleyin."}
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {formContent}
       </CardContent>
     </Card>
   )

@@ -48,7 +48,7 @@ export default async function CompanyMatchesPage() {
       </div>
 
       {!matches || matches.length === 0 ? (
-        <Card className="border-dashed bg-card dark:bg-zinc-900/50 dark:border-zinc-800">
+        <Card className="border-dashed bg-card border-border">
           <CardContent className="flex flex-col items-center justify-center py-16">
             <Star className="size-16 text-muted-foreground mb-4 opacity-20" />
             <h3 className="text-lg font-semibold mb-2">Henüz eşleşme yok</h3>
@@ -62,7 +62,7 @@ export default async function CompanyMatchesPage() {
           {matches.map((match: any) => (
             <Card
               key={match.id}
-              className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800 hover:border-primary/50 transition-colors"
+              className="bg-card border-border hover:border-primary/50 transition-colors"
             >
               <CardHeader>
                 <div className="flex items-start justify-between">

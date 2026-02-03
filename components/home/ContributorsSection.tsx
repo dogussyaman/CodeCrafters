@@ -52,7 +52,7 @@ export function ContributorsSection() {
             CodeCrafters topluluğu ve platforma destek veren herkes.
           </p>
         </div>
-        <div className="rounded-2xl border border-border bg-card/50 dark:bg-zinc-900/90 backdrop-blur-sm overflow-hidden">
+        <div className="rounded-2xl border border-border bg-card/50 backdrop-blur-sm overflow-hidden">
           <AnimatedTestimonials testimonials={TESTIMONIALS} autoplay />
         </div>
       </div>

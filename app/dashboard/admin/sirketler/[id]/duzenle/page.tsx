@@ -112,7 +112,7 @@ export default function AdminEditCompanyPage({ params }: { params: Promise<{ id:
                 </Link>
             </div>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader>
                     <CardTitle className="text-2xl">Şirketi Düzenle</CardTitle>
                     <CardDescription>Şirket bilgilerini güncelleyin</CardDescription>
@@ -129,7 +129,7 @@ export default function AdminEditCompanyPage({ params }: { params: Promise<{ id:
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 placeholder="Örn: Acme Technology"
-                                className="dark:bg-zinc-800/50 dark:border-zinc-700"
+                                className="dark:bg-input/50 dark:border-input"
                             />
                         </div>
 
@@ -139,7 +139,7 @@ export default function AdminEditCompanyPage({ params }: { params: Promise<{ id:
                                 value={formData.plan}
                                 onValueChange={(value) => setFormData({ ...formData, plan: value as CompanyPlan })}
                             >
-                                <SelectTrigger id="plan" className="dark:bg-zinc-800/50 dark:border-zinc-700">
+                                <SelectTrigger id="plan" className="dark:bg-input/50 dark:border-input">
                                     <SelectValue placeholder="Plan seçin" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -158,7 +158,7 @@ export default function AdminEditCompanyPage({ params }: { params: Promise<{ id:
                                     value={formData.industry}
                                     onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
                                     placeholder="Örn: Yazılım, Finans"
-                                    className="dark:bg-zinc-800/50 dark:border-zinc-700"
+                                    className="dark:bg-input/50 dark:border-input"
                                 />
                             </div>
 
@@ -169,7 +169,7 @@ export default function AdminEditCompanyPage({ params }: { params: Promise<{ id:
                                     value={formData.location}
                                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                                     placeholder="Örn: İstanbul, Türkiye"
-                                    className="dark:bg-zinc-800/50 dark:border-zinc-700"
+                                    className="dark:bg-input/50 dark:border-input"
                                 />
                             </div>
                         </div>
@@ -183,7 +183,7 @@ export default function AdminEditCompanyPage({ params }: { params: Promise<{ id:
                                     value={formData.website}
                                     onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                                     placeholder="https://ornek.com"
-                                    className="dark:bg-zinc-800/50 dark:border-zinc-700"
+                                    className="dark:bg-input/50 dark:border-input"
                                 />
                             </div>
 
@@ -194,7 +194,7 @@ export default function AdminEditCompanyPage({ params }: { params: Promise<{ id:
                                     value={formData.employee_count}
                                     onChange={(e) => setFormData({ ...formData, employee_count: e.target.value })}
                                     placeholder="Örn: 50-100"
-                                    className="dark:bg-zinc-800/50 dark:border-zinc-700"
+                                    className="dark:bg-input/50 dark:border-input"
                                 />
                             </div>
                         </div>
@@ -207,7 +207,7 @@ export default function AdminEditCompanyPage({ params }: { params: Promise<{ id:
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 placeholder="Şirket hakkında kısa bir açıklama..."
                                 rows={4}
-                                className="dark:bg-zinc-800/50 dark:border-zinc-700"
+                                className="dark:bg-input/50 dark:border-input"
                             />
                         </div>
 

@@ -23,7 +23,8 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
+import { SKILL_TYPE_MAP } from "@/lib/status-variants"
 
 interface Skill {
     id: string
@@ -100,17 +101,8 @@ export function SkillsManager({ initialSkills }: SkillsManagerProps) {
     )
 
     const getCategoryBadge = (category: string) => {
-        const categoryConfig: Record<string, { label: string; className: string }> = {
-            programming: { label: "Programlama", className: "bg-blue-500/10 text-blue-700 dark:text-blue-400" },
-            framework: { label: "Framework", className: "bg-green-500/10 text-green-700 dark:text-green-400" },
-            tool: { label: "Araç", className: "bg-purple-500/10 text-purple-700 dark:text-purple-400" },
-            "soft-skill": { label: "Soft Skill", className: "bg-orange-500/10 text-orange-700 dark:text-orange-400" },
-            language: { label: "Dil", className: "bg-pink-500/10 text-pink-700 dark:text-pink-400" },
-            other: { label: "Diğer", className: "bg-gray-500/10 text-gray-700 dark:text-gray-400" },
-        }
-
-        const config = categoryConfig[category] || { label: category, className: "" }
-        return <Badge className={config.className}>{config.label}</Badge>
+        const config = SKILL_TYPE_MAP[category] || { label: category, variant: "outline" as const }
+        return <Badge variant={config.variant}>{config.label}</Badge>
     }
 
     return (

@@ -41,7 +41,7 @@ export function DestekFaqSection() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant="secondary" className="text-xs font-normal">Genel</Badge>
                       <Badge variant="outline" className="text-xs font-normal">Popüler</Badge>
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle2 className="h-4 w-4 text-success" />
                       CodeCrafters nedir ve nasıl çalışır?
                     </div>
                   </AccordionTrigger>

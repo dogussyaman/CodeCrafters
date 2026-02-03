@@ -85,7 +85,7 @@ export function DashboardHeader({ profile }: DashboardHeaderProps) {
                       {getInitials(profile.full_name || "")}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 bg-green-500 border-2 border-background rounded-full" />
+                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 bg-success border-2 border-background rounded-full" />
                 </div>
                 <div className="hidden md:block text-left py-0.5">
                   <div className="text-sm font-semibold leading-tight">{profile.full_name}</div>

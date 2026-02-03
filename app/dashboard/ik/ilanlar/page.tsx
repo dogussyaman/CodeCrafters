@@ -71,7 +71,7 @@ export default async function JobsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {jobs.map((job: any) => (
-            <Card key={job.id} className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800 hover:border-primary/50 transition-colors">
+            <Card key={job.id} className="bg-card border-border hover:border-primary/50 transition-colors">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -79,7 +79,7 @@ export default async function JobsPage() {
                       <CardTitle className="text-xl">{job.title}</CardTitle>
                       <Badge
                         variant={job.status === "active" ? "default" : "secondary"}
-                        className={job.status === "active" ? "bg-green-500/10 text-green-700 dark:text-green-400" : ""}
+                        className={job.status === "active" ? "bg-success/10 text-success" : ""}
                       >
                         {job.status === "active" ? "Aktif" : job.status === "draft" ? "Taslak" : "Kapalı"}
                       </Badge>

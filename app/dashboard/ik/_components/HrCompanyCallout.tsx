@@ -9,7 +9,7 @@ export function HrCompanyCallout({ companyCount }: HrCompanyCalloutProps) {
     if (companyCount && companyCount > 0) return null
 
     return (
-        <Card className="border-primary/50 bg-primary/5 dark:bg-zinc-900/50 dark:border-zinc-800">
+        <Card className="border-primary/50 bg-primary/5">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Building2 className="size-5" />

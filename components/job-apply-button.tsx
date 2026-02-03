@@ -20,7 +20,7 @@ export function JobApplyButton({ jobId, jobTitle, label, hasApplied = false, isA
 
   if (hasApplied) {
     return (
-      <Button size="lg" className="gap-2 bg-green-600 hover:bg-green-700 cursor-default" disabled>
+      <Button size="lg" variant="success" className="gap-2 cursor-default" disabled>
         <CheckCircle2 className="size-4" />
         Başvuruldu
       </Button>

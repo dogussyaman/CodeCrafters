@@ -16,13 +16,13 @@ export function AuthSplitLayout({ children, title, subtitle }: AuthSplitLayoutPr
   return (
     <div className="min-h-screen w-full grid lg:grid-cols-2">
       {/* Left Side - Gradient Background */}
-      <div className="relative hidden lg:flex overflow-hidden bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500">
+      <div className="relative hidden lg:flex overflow-hidden bg-gradient-to-br from-primary via-accent to-primary/80">
 
-        {/* Blob Effects - Smaller and positioned at corners */}
-        <div className="absolute -top-20 -left-20 w-64 h-64 bg-orange-400 rounded-full mix-blend-multiply blur-3xl opacity-50 animate-blob" />
-        <div className="absolute -top-10 -right-20 w-56 h-56 bg-pink-400 rounded-full mix-blend-multiply blur-3xl opacity-50 animate-blob animation-delay-2000" />
-        <div className="absolute -bottom-20 -left-10 w-60 h-60 bg-yellow-300 rounded-full mix-blend-multiply blur-3xl opacity-50 animate-blob animation-delay-4000" />
-        <div className="absolute -bottom-16 -right-16 w-52 h-52 bg-orange-300 rounded-full mix-blend-multiply blur-3xl opacity-40 animate-blob animation-delay-2000" />
+        {/* Blob Effects - Token-based */}
+        <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/40 rounded-full mix-blend-multiply blur-3xl opacity-50 animate-blob" />
+        <div className="absolute -top-10 -right-20 w-56 h-56 bg-accent/40 rounded-full mix-blend-multiply blur-3xl opacity-50 animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-20 -left-10 w-60 h-60 bg-warning/30 rounded-full mix-blend-multiply blur-3xl opacity-50 animate-blob animation-delay-4000" />
+        <div className="absolute -bottom-16 -right-16 w-52 h-52 bg-primary/30 rounded-full mix-blend-multiply blur-3xl opacity-40 animate-blob animation-delay-2000" />
 
         {/* Floating Icons - Positioned at corners */}
         {/* Top Left */}

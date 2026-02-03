@@ -167,8 +167,8 @@ function VerifyOTPContent() {
         >
           {success ? (
             <div className="space-y-6 text-center">
-              <div className="size-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto">
-                <CheckCircle2 className="size-10 text-green-500" />
+              <div className="size-20 rounded-full bg-success/10 flex items-center justify-center mx-auto">
+                <CheckCircle2 className="size-10 text-success" />
               </div>
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold text-foreground">Doğrulama Başarılı!</h1>

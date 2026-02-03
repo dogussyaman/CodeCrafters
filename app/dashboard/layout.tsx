@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import { createClient } from "@/lib/supabase/server"
@@ -10,6 +11,7 @@ import { AdminSidebar } from "@/components/admin-sidebar"
 import { DashboardShellHeader } from "@/components/dashboard-shell-header"
 import { DashboardSegmentGuard } from "@/components/dashboard-segment-guard"
 import { DashboardFooter } from "@/components/dashboard-footer"
+import { DashboardProjeYetkinizToast } from "@/components/dashboard-proje-yetkiniz-toast"
 import type { Profile } from "@/lib/types"
 
 const DASHBOARD_ROLES = ["developer", "hr", "company_admin", "admin", "platform_admin", "mt"] as const
@@ -57,6 +59,9 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       <SidebarInset className="flex min-h-screen flex-col">
         <DashboardShellHeader profile={profile as Profile} />
         <main className="min-h-screen flex-1 flex flex-col p-4 md:p-6">
+          <Suspense fallback={null}>
+            <DashboardProjeYetkinizToast />
+          </Suspense>
           <DashboardSegmentGuard role={role}>
             <div className="flex-1 flex flex-col min-h-0">{children}</div>
           </DashboardSegmentGuard>

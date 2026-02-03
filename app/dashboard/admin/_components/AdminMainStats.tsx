@@ -18,7 +18,7 @@ export function AdminMainStats({
 }: AdminMainStatsProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">Toplam Kullanıcı</CardTitle>
                     <Users className="size-5 text-primary" />
@@ -29,10 +29,10 @@ export function AdminMainStats({
                 </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">Şirketler</CardTitle>
-                    <Building2 className="size-5 text-blue-500" />
+                    <Building2 className="size-5 text-primary" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-3xl font-bold text-foreground">{companyCount || 0}</div>
@@ -40,10 +40,10 @@ export function AdminMainStats({
                 </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">İş İlanları</CardTitle>
-                    <Briefcase className="size-5 text-purple-500" />
+                    <Briefcase className="size-5 text-accent" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-3xl font-bold text-foreground">{jobCount || 0}</div>
@@ -51,7 +51,7 @@ export function AdminMainStats({
                 </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">Eşleşmeler</CardTitle>
                     <Star className="size-5 text-primary" />

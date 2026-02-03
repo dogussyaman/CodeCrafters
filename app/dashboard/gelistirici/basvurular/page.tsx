@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Briefcase, Clock } from "lucide-react"
+import { APPLICATION_STATUS_MAP_DEV } from "@/lib/status-variants"
 
 export default async function ApplicationsPage() {
   const supabase = await createClient()
@@ -34,16 +35,8 @@ export default async function ApplicationsPage() {
     .order("created_at", { ascending: false })
 
   const getStatusBadge = (status: string) => {
-    const statusConfig: Record<string, { label: string; className: string }> = {
-      pending: { label: "İnceleniyor", className: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400" },
-      reviewed: { label: "İncelendi", className: "bg-blue-500/10 text-blue-700 dark:text-blue-400" },
-      interview: { label: "Görüşme", className: "bg-purple-500/10 text-purple-700 dark:text-purple-400" },
-      rejected: { label: "Reddedildi", className: "bg-red-500/10 text-red-700 dark:text-red-400" },
-      accepted: { label: "Kabul Edildi", className: "bg-green-500/10 text-green-700 dark:text-green-400" },
-    }
-
-    const config = statusConfig[status] || { label: status, className: "" }
-    return <Badge className={config.className}>{config.label}</Badge>
+    const config = APPLICATION_STATUS_MAP_DEV[status] || { label: status, variant: "outline" as const }
+    return <Badge variant={config.variant}>{config.label}</Badge>
   }
 
   const formatDate = (date: string) => {
@@ -62,7 +55,7 @@ export default async function ApplicationsPage() {
       </div>
 
       {!applications || applications.length === 0 ? (
-        <Card className="border-dashed bg-card dark:bg-zinc-900/50 dark:border-zinc-800">
+        <Card className="border-dashed bg-card border-border">
           <CardContent className="flex flex-col items-center justify-center py-16">
             <Briefcase className="size-16 text-muted-foreground mb-4 opacity-20" />
             <h3 className="text-lg font-semibold mb-2">Henüz başvuru yapmadınız</h3>
@@ -74,7 +67,7 @@ export default async function ApplicationsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {applications.map((application: any) => (
-            <Card key={application.id} className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card key={application.id} className="bg-card border-border">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>

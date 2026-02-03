@@ -108,7 +108,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
       <div className="bg-card border rounded-3xl overflow-hidden shadow-sm">
         {/* Banner / Header Background */}
         <div
-          className="h-48 bg-gradient-to-r from-blue-600 to-indigo-600 relative bg-cover bg-center"
+          className="h-48 bg-gradient-to-r from-primary to-primary/80 relative bg-cover bg-center"
           style={profile?.profile_bg_url ? { backgroundImage: `url(${profile.profile_bg_url})` } : {}}
         >
           {/* Eğer resim varsa overlay ekle ki yazı okunabilsin (hoş butonlar vs için) */}
@@ -153,7 +153,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
                   </div>
                 )}
                 {profile?.website && (
-                  <div className="flex items-center gap-1 text-blue-600 hover:underline">
+                  <div className="flex items-center gap-1 text-primary hover:underline">
                     <Globe className="size-4" />
                     <a href={profile.website} target="_blank" rel="noopener noreferrer">Web Sitesi</a>
                   </div>

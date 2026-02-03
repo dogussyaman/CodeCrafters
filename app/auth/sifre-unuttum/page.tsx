@@ -64,7 +64,7 @@ export default function ForgotPasswordPage() {
       <AuthSplitLayout title="E-posta Gönderildi" subtitle="Şifre sıfırlama bağlantısı e-postanıza gönderildi">
         <div className="space-y-4">
           <div className="flex flex-col items-center justify-center space-y-4 p-6 bg-muted/50 rounded-lg border">
-            <CheckCircle2 className="size-12 text-green-500" />
+            <CheckCircle2 className="size-12 text-success" />
             <div className="text-center space-y-2">
               <h3 className="font-semibold text-lg">E-posta Gönderildi</h3>
               <p className="text-sm text-muted-foreground">

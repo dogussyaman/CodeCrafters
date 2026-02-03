@@ -229,7 +229,7 @@ export function CoverLetterList({ initialCoverLetters, userId }: CoverLetterList
                                         onClick={() => toggleFavorite(letter)}
                                     >
                                         {letter.is_favorite ? (
-                                            <Star className="size-4 text-yellow-500 fill-yellow-500" />
+                                            <Star className="size-4 text-warning fill-warning" />
                                         ) : (
                                             <StarOff className="size-4 text-muted-foreground" />
                                         )}

@@ -14,6 +14,7 @@ import {
   ClipboardList,
   Mail,
   FileText,
+  Code2,
 } from "lucide-react"
 import {
   Sidebar,
@@ -26,7 +27,7 @@ import {
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 
-const menuItems = [
+const baseMenuItems = [
   { title: "Panel", href: "/dashboard/admin", icon: Home },
   { title: "Kullanıcılar", href: "/dashboard/admin/kullanicilar", icon: Users },
   { title: "Şirketler", href: "/dashboard/admin/sirketler", icon: Building2 },
@@ -40,12 +41,18 @@ const menuItems = [
   { title: "Yetenekler", href: "/dashboard/admin/yetenekler", icon: Settings },
 ]
 
+const projelerItem = { title: "Projeler", href: "/dashboard/admin/projeler", icon: Code2 }
+
 interface AdminSidebarProps {
-  profile?: { full_name?: string; email?: string } | null
+  profile?: { full_name?: string; email?: string; role?: string } | null
 }
 
 export function AdminSidebar({ profile }: AdminSidebarProps) {
   const pathname = usePathname()
+  const menuItems =
+    profile?.role === "admin"
+      ? [baseMenuItems[0], projelerItem, ...baseMenuItems.slice(1)]
+      : baseMenuItems
 
   return (
     <Sidebar>
@@ -68,9 +75,11 @@ export function AdminSidebar({ profile }: AdminSidebarProps) {
           {menuItems.map((item) => {
             const Icon = item.icon
             const isRoot = item.href === "/dashboard/admin"
-            const isActive =
-              isRoot
-                ? pathname === item.href
+            const isProjeler = item.href === "/dashboard/admin/projeler"
+            const isActive = isRoot
+              ? pathname === item.href
+              : isProjeler
+                ? pathname === item.href || pathname.startsWith(item.href + "/")
                 : pathname === item.href || pathname.startsWith(item.href + "/")
             return (
               <SidebarMenuItem key={item.href}>

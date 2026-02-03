@@ -73,7 +73,7 @@ export function AdminNotificationsForm() {
     }
 
     return (
-        <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+        <Card className="bg-card border-border">
             <CardHeader>
                 <CardTitle>Yeni Bildirim (In-App)</CardTitle>
                 <CardDescription>

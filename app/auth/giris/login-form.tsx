@@ -174,7 +174,7 @@ export function LoginForm() {
                 </div>
 
                 {success && (
-                    <div className="text-sm text-green-600 bg-green-500/10 p-3 rounded-lg border border-green-500/20 flex items-center gap-2">
+                    <div className="text-sm text-success bg-success/10 p-3 rounded-lg border border-success/20 flex items-center gap-2">
                         <CheckCircle2 className="size-4" />
                         {success}
                     </div>

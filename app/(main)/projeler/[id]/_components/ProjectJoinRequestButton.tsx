@@ -20,9 +20,10 @@ import { toast } from "sonner"
 interface ProjectJoinRequestButtonProps {
   projectId: string
   disabled?: boolean
+  variant?: "default" | "primary" | "outline"
 }
 
-export function ProjectJoinRequestButton({ projectId, disabled }: ProjectJoinRequestButtonProps) {
+export function ProjectJoinRequestButton({ projectId, disabled, variant = "outline" }: ProjectJoinRequestButtonProps) {
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState("")
   const [pending, setPending] = useState(false)
@@ -42,10 +43,12 @@ export function ProjectJoinRequestButton({ projectId, disabled }: ProjectJoinReq
     setPending(false)
   }
 
+  const buttonVariant = variant === "primary" ? "default" : variant
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="gap-2 bg-transparent" disabled={disabled}>
+        <Button variant={buttonVariant} className="gap-2" disabled={disabled}>
           <UserPlus className="size-4" />
           Katılma İsteği Gönder
         </Button>

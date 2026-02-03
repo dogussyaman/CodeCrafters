@@ -1,13 +1,16 @@
 import { notFound } from "next/navigation"
+import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Github, ExternalLink, Heart, Eye, ArrowLeft, Code2 } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Github, ExternalLink, Heart, Eye, ArrowLeft, Code2, Users } from "lucide-react"
 import { createServerClient } from "@/lib/supabase/server"
 import { ProjectLikeButton } from "./_components/ProjectLikeButton"
 import { ProjectJoinRequestButton } from "./_components/ProjectJoinRequestButton"
+import { ProjectsHowToJoin } from "../_components/ProjectsHowToJoin"
 
 export default async function ProjeDetayPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -40,6 +43,23 @@ export default async function ProjeDetayPage({ params }: { params: Promise<{ id:
 
   const teknolojiler = Array.isArray(proje.technologies) ? proje.technologies : JSON.parse(proje.technologies || "[]")
 
+  // Projede çalışanlar: sahip + onaylı katılımcılar
+  const { data: ownerProfile } = proje.created_by
+    ? await supabase.from("profiles").select("id, full_name, avatar_url").eq("id", proje.created_by).single()
+    : { data: null }
+  const { data: approvedRequests } = await supabase
+    .from("project_join_requests")
+    .select("user_id, profiles(id, full_name, avatar_url)")
+    .eq("project_id", id)
+    .eq("status", "approved")
+  const memberProfiles = (approvedRequests ?? [])
+    .map((r) => r.profiles)
+    .filter(Boolean) as { id: string; full_name: string | null; avatar_url: string | null }[]
+  const contributors = [
+    ...(ownerProfile ? [ownerProfile] : []),
+    ...memberProfiles,
+  ]
+
   return (
     <div className="min-h-screen bg-background py-32">
       <div className="container mx-auto px-4 max-w-5xl">
@@ -51,7 +71,18 @@ export default async function ProjeDetayPage({ params }: { params: Promise<{ id:
         </Button>
 
         <Card className="overflow-hidden">
-          {proje.image_url && (
+          {proje.image_url ? (
+            <div className="relative w-full h-80 bg-muted">
+              <Image
+                src={proje.image_url}
+                alt={proje.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 1024px"
+                priority
+              />
+            </div>
+          ) : (
             <div className="w-full h-80 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
               <Code2 className="size-32 text-primary/30" />
             </div>
@@ -89,6 +120,66 @@ export default async function ProjeDetayPage({ params }: { params: Promise<{ id:
                   </Button>
                 )}
               </div>
+            </div>
+
+            {contributors.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+                  <Users className="size-4" />
+                  Projede çalışanlar
+                </h3>
+                <div className="flex items-center -space-x-2">
+                  {contributors.map((person, idx) => (
+                    <Avatar
+                      key={person.id}
+                      className={`size-10 border-2 border-background ${idx === 0 ? "ring-2 ring-red-500 ring-offset-2 ring-offset-background z-10" : ""}`}
+                      title={person.full_name ?? undefined}
+                    >
+                      <AvatarImage src={person.avatar_url ?? undefined} alt={person.full_name ?? ""} />
+                      <AvatarFallback className="text-xs bg-muted">
+                        {(person.full_name ?? "?").slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Projeye katılma: her zaman görünür blok */}
+            <div className="mb-8 rounded-lg border bg-muted/30 p-6">
+              <h3 className="text-lg font-semibold mb-2">Projeye katılmak ister misiniz?</h3>
+              {!user ? (
+                <>
+                  <p className="text-muted-foreground text-sm mb-3">
+                    Katılma isteği göndermek için giriş yapın. Giriş yaptıktan sonra bu sayfada Katılma isteği gönder
+                    butonunu göreceksiniz.
+                  </p>
+                  <Button asChild>
+                    <Link href="/auth/giris">Giriş yap</Link>
+                  </Button>
+                </>
+              ) : isOwner ? (
+                <p className="text-muted-foreground text-sm">
+                  Bu projenin sahibi sizsiniz. Gelen katılma isteklerini{" "}
+                  <Link href="/dashboard/gelistirici/projelerim" className="text-primary hover:underline">
+                    Projelerim
+                  </Link>{" "}
+                  sayfasından yönetebilirsiniz.
+                </p>
+              ) : (
+                <div className="flex flex-wrap items-center gap-3">
+                  <ProjectJoinRequestButton projectId={proje.id} disabled={!!joinRequest} variant="primary" />
+                  {joinRequest && (
+                    <p className="text-sm text-muted-foreground">
+                      {joinRequest.status === "pending"
+                        ? "Katılma isteğiniz proje sahibine iletildi."
+                        : joinRequest.status === "approved"
+                          ? "Katılma isteğiniz onaylandı."
+                          : "Katılma isteğiniz reddedildi."}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
 
             <Separator className="my-8" />
@@ -146,22 +237,14 @@ export default async function ProjeDetayPage({ params }: { params: Promise<{ id:
                       </Link>
                     </Button>
                   )}
-                  {showJoinRequestButton && (
-                    <ProjectJoinRequestButton
-                      projectId={proje.id}
-                      disabled={!!joinRequest}
-                    />
-                  )}
                 </div>
-                {showJoinRequestButton && joinRequest && (
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    {joinRequest.status === "pending"
-                      ? "Katılma isteğiniz proje sahibine iletildi."
-                      : joinRequest.status === "approved"
-                        ? "Katılma isteğiniz onaylandı."
-                        : "Katılma isteğiniz reddedildi."}
-                  </p>
-                )}
+              </div>
+
+              <Separator className="my-8" />
+
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Projeye Nasıl Katılırım?</h2>
+                <ProjectsHowToJoin />
               </div>
             </div>
           </CardContent>

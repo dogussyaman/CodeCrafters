@@ -6,7 +6,7 @@ import { Briefcase, Star, Upload } from "lucide-react"
 export function DeveloperSidebar() {
     return (
         <div className="space-y-6">
-            <Card className="bg-gradient-to-br from-card to-muted/30 border-border/50 dark:from-zinc-900/50 dark:to-zinc-900/30 dark:border-zinc-800">
+            <Card className="bg-gradient-to-br from-card to-muted/30 border-border">
                 <CardContent className="p-6">
                     <CardTitle className="text-lg mb-4">Hızlı İşlemler</CardTitle>
                     <div className="grid gap-3">
@@ -27,11 +27,11 @@ export function DeveloperSidebar() {
                         </Button>
                         <Button
                             variant="outline"
-                            className="w-full justify-start h-auto py-3 px-4 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all"
+                            className="w-full justify-start h-auto py-3 px-4 hover:border-primary/50 hover:bg-primary/5 transition-all"
                             asChild
                         >
                             <Link href="/dashboard/gelistirici/basvurular">
-                                <div className="p-2 rounded-full bg-blue-500/10 text-blue-600 mr-3">
+                                <div className="p-2 rounded-full bg-primary/10 text-primary mr-3">
                                     <Briefcase className="size-4" />
                                 </div>
                                 <div className="text-left">

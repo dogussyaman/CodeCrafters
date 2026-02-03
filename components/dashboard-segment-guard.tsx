@@ -15,8 +15,12 @@ function canAccessSegment(pathname: string, role: string): boolean {
     return role === "admin" || role === "platform_admin" || role === "mt"
   if (pathname.startsWith("/dashboard/ik")) return role === "hr"
   if (pathname.startsWith("/dashboard/company")) return role === "company_admin"
-  if (pathname.startsWith("/dashboard/gelistirici")) return role === "developer"
+  if (pathname.startsWith("/dashboard/gelistirici")) return role === "developer" || role === "admin"
   return true
+}
+
+function isProjelerimPath(pathname: string): boolean {
+  return pathname.includes("projelerim")
 }
 
 interface DashboardSegmentGuardProps {
@@ -35,7 +39,9 @@ export function DashboardSegmentGuard({ role, children }: DashboardSegmentGuardP
       return
     }
     if (!canAccessSegment(pathname, role)) {
-      router.replace(getRoleHome(role))
+      const home = getRoleHome(role)
+      const suffix = isProjelerimPath(pathname) ? "?proje_yetkiniz=1" : ""
+      router.replace(home + suffix)
     }
   }, [pathname, role, router])
 

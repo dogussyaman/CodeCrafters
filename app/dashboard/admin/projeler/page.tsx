@@ -1,15 +1,14 @@
 import Link from "next/link"
-import Image from "next/image"
 import { createServerClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Pencil, Trash2, ExternalLink, Code2 } from "lucide-react"
 import { redirect } from "next/navigation"
-import { ProjectDeleteButton } from "./_components/ProjectDeleteButton"
-import { JoinRequestsList } from "./_components/JoinRequestsList"
+import { ProjectDeleteButton } from "@/app/dashboard/gelistirici/projelerim/_components/ProjectDeleteButton"
+import { JoinRequestsList } from "@/app/dashboard/gelistirici/projelerim/_components/JoinRequestsList"
 
-export default async function ProjelerimPage() {
+export default async function AdminProjelerPage() {
   const supabase = await createServerClient()
   const {
     data: { user },
@@ -18,7 +17,7 @@ export default async function ProjelerimPage() {
 
   const { data: projeler } = await supabase
     .from("projects")
-    .select("id, title, description, status, category, github_url, demo_url, technologies, stars, created_at, image_url")
+    .select("id, title, description, status, category, github_url, demo_url, technologies, stars, created_at")
     .eq("created_by", user.id)
     .order("updated_at", { ascending: false })
 
@@ -36,24 +35,20 @@ export default async function ProjelerimPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Projelerim</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Projeler</h1>
           <p className="text-muted-foreground">Açık kaynak projelerinizi yönetin ve toplulukla paylaşın.</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/gelistirici/projelerim/yeni" className="gap-2">
+          <Link href="/dashboard/admin/projeler/yeni" className="gap-2">
             <Plus className="size-4" />
             Yeni Proje
           </Link>
         </Button>
       </div>
 
-      {joinRequests && joinRequests.length > 0 ? (
+      {joinRequests && joinRequests.length > 0 && (
         <JoinRequestsList requests={joinRequests as Parameters<typeof JoinRequestsList>[0]["requests"]} />
-      ) : projeler && projeler.length > 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Projelerinize gelen katılma istekleri burada listelenecek. Henüz bekleyen istek yok.
-        </p>
-      ) : null}
+      )}
 
       {!projeler?.length ? (
         <Card>
@@ -61,7 +56,7 @@ export default async function ProjelerimPage() {
             <Code2 className="size-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground mb-4">Henüz proje eklemediniz.</p>
             <Button asChild>
-              <Link href="/dashboard/gelistirici/projelerim/yeni" className="gap-2">
+              <Link href="/dashboard/admin/projeler/yeni" className="gap-2">
                 <Plus className="size-4" />
                 İlk Projenizi Ekleyin
               </Link>
@@ -78,17 +73,6 @@ export default async function ProjelerimPage() {
                 : []
             return (
               <Card key={proje.id}>
-                {proje.image_url && (
-                  <div className="relative aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
-                    <Image
-                      src={proje.image_url}
-                      alt={proje.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  </div>
-                )}
                 <CardHeader className="flex flex-row items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     <CardTitle className="truncate">{proje.title}</CardTitle>
@@ -115,7 +99,7 @@ export default async function ProjelerimPage() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/dashboard/gelistirici/projelerim/${proje.id}/duzenle`} className="gap-1">
+                      <Link href={`/dashboard/admin/projeler/${proje.id}/duzenle`} className="gap-1">
                         <Pencil className="size-3.5" />
                         Düzenle
                       </Link>

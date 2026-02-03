@@ -10,7 +10,7 @@ interface HrRecentJobsProps {
 
 export function HrRecentJobs({ recentJobs }: HrRecentJobsProps) {
     return (
-        <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+        <Card className="bg-card border-border">
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <div>
@@ -46,7 +46,7 @@ export function HrRecentJobs({ recentJobs }: HrRecentJobsProps) {
                                         {job.location && <span>{job.location}</span>}
                                         {job.job_type && <span className="capitalize">{job.job_type.replace("-", " ")}</span>}
                                         <span
-                                            className={job.status === "active" ? "text-green-600 dark:text-green-400" : "text-yellow-600"}
+                                            className={job.status === "active" ? "text-success" : "text-warning"}
                                         >
                                             {job.status === "active" ? "Aktif" : "Taslak"}
                                         </span>

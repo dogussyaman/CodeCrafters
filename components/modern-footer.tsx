@@ -71,7 +71,7 @@ export function ModernFooter() {
                 <Send className="h-4 w-4" />
               </Button>
             </form>
-            {subscribed && <p className="text-sm text-green-500 animate-in fade-in">Başarıyla kaydoldunuz!</p>}
+            {subscribed && <p className="text-sm text-success animate-in fade-in">Başarıyla kaydoldunuz!</p>}
             {error && <p className="text-sm text-destructive animate-in fade-in">{error}</p>}
           </div>
 
@@ -160,7 +160,7 @@ export function ModernFooter() {
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground flex items-center gap-1">
             © 2026 CodeCrafters. Tüm hakları saklıdır.
-            <Heart className="h-4 w-4 text-red-500 inline fill-red-500" />
+            <Heart className="h-4 w-4 text-destructive inline fill-destructive" />
             ile Türkiye'de geliştirildi
           </p>
           <div className="flex items-center gap-6 text-sm">

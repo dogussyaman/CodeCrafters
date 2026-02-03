@@ -53,7 +53,7 @@ export default async function CompanyJobsPage() {
       </div>
 
       {!jobs || jobs.length === 0 ? (
-        <Card className="border-dashed bg-card dark:bg-zinc-900/50 dark:border-zinc-800">
+        <Card className="border-dashed bg-card border-border">
           <CardContent className="flex flex-col items-center justify-center py-16">
             <Briefcase className="size-16 text-muted-foreground mb-4 opacity-20" />
             <h3 className="text-lg font-semibold mb-2">Henüz ilan oluşturmadınız</h3>
@@ -73,7 +73,7 @@ export default async function CompanyJobsPage() {
           {jobs.map((job: any) => (
             <Card
               key={job.id}
-              className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800 hover:border-primary/50 transition-colors"
+              className="bg-card border-border hover:border-primary/50 transition-colors"
             >
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -82,7 +82,7 @@ export default async function CompanyJobsPage() {
                       <CardTitle className="text-xl">{job.title}</CardTitle>
                       <Badge
                         variant={job.status === "active" ? "default" : "secondary"}
-                        className={job.status === "active" ? "bg-green-500/10 text-green-700 dark:text-green-400" : ""}
+                        className={job.status === "active" ? "bg-success/10 text-success" : ""}
                       >
                         {job.status === "active" ? "Aktif" : job.status === "draft" ? "Taslak" : "Kapalı"}
                       </Badge>

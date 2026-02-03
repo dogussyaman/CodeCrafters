@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation"
 import { createServerClient } from "@/lib/supabase/server"
-import { ProjectForm } from "../../_components/ProjectForm"
+import { ProjectForm } from "@/app/dashboard/gelistirici/projelerim/_components/ProjectForm"
 
-export default async function ProjeDuzenlePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function AdminProjeDuzenlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createServerClient()
   const {
@@ -30,6 +30,7 @@ export default async function ProjeDuzenlePage({ params }: { params: Promise<{ i
       <ProjectForm
         mode="edit"
         projectId={proje.id}
+        listPath="/dashboard/admin/projeler"
         initialValues={{
           title: proje.title,
           description: proje.description,

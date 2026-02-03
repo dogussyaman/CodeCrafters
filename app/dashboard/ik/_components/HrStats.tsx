@@ -10,7 +10,7 @@ interface HrStatsProps {
 export function HrStats({ companyCount, jobCount, applicationCount }: HrStatsProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">Şirketler</CardTitle>
                     <Building2 className="size-5 text-primary" />
@@ -21,10 +21,10 @@ export function HrStats({ companyCount, jobCount, applicationCount }: HrStatsPro
                 </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">Aktif İlanlar</CardTitle>
-                    <Briefcase className="size-5 text-purple-500" />
+                    <Briefcase className="size-5 text-accent" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-3xl font-bold text-foreground">{jobCount || 0}</div>
@@ -32,10 +32,10 @@ export function HrStats({ companyCount, jobCount, applicationCount }: HrStatsPro
                 </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">Başvurular</CardTitle>
-                    <Users className="size-5 text-blue-500" />
+                    <Users className="size-5 text-primary" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-3xl font-bold text-foreground">{applicationCount || 0}</div>
@@ -43,7 +43,7 @@ export function HrStats({ companyCount, jobCount, applicationCount }: HrStatsPro
                 </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">Eşleşmeler</CardTitle>
                     <Star className="size-5 text-primary" />

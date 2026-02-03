@@ -22,7 +22,7 @@ export default async function CVPage() {
     switch (status) {
       case "processed":
         return (
-          <Badge className="bg-green-500/10 text-green-700 dark:text-green-400">
+          <Badge variant="success">
             <CheckCircle className="mr-1 size-3" />
             İşlendi
           </Badge>
@@ -125,7 +125,7 @@ export default async function CVPage() {
                         )}
 
                         {cv.parsed_data.seniority && (
-                          <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-950/40 dark:text-blue-300">
+                          <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                             Seviye: {cv.parsed_data.seniority}
                           </span>
                         )}

@@ -95,10 +95,10 @@ export default function AdminCompaniesPage() {
 
                     {/* Table */}
                     {loading ? (
-                        <div className="border rounded-lg border-border/50 dark:border-zinc-800">
+                        <div className="border rounded-lg border-border">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="border-border/50 dark:border-zinc-800">
+                                    <TableRow className="border-border">
                                         <TableHead>Şirket Adı</TableHead>
                                         <TableHead>Sektör</TableHead>
                                         <TableHead>Çalışan Sayısı</TableHead>
@@ -123,10 +123,10 @@ export default function AdminCompaniesPage() {
                             </p>
                         </div>
                     ) : (
-                        <div className="border rounded-lg border-border/50 dark:border-zinc-800">
+                        <div className="border rounded-lg border-border">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="border-border/50 dark:border-zinc-800">
+                                    <TableRow className="border-border">
                                         <TableHead>Şirket Adı</TableHead>
                                         <TableHead>Sektör</TableHead>
                                         <TableHead>Çalışan Sayısı</TableHead>
@@ -138,7 +138,7 @@ export default function AdminCompaniesPage() {
                                 </TableHeader>
                                 <TableBody>
                                     {filteredCompanies.map((company) => (
-                                        <TableRow key={company.id} className="border-border/50 dark:border-zinc-800">
+                                        <TableRow key={company.id} className="border-border">
                                             <TableCell className="font-medium">{company.name}</TableCell>
                                             <TableCell>{company.industry || "-"}</TableCell>
                                             <TableCell>{company.employee_count || "-"}</TableCell>
@@ -153,7 +153,7 @@ export default function AdminCompaniesPage() {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
+                                                <Badge variant="success">
                                                     Aktif
                                                 </Badge>
                                             </TableCell>

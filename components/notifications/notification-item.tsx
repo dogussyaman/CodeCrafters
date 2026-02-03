@@ -15,21 +15,19 @@ interface NotificationItemProps {
 const getNotificationIcon = (type: string) => {
     switch (type) {
         case "new_application":
-            return <Briefcase className="size-5 text-blue-500" />
+            return <Briefcase className="size-5 text-primary" />
         case "application_status_changed":
-            return <FileText className="size-5 text-orange-500" />
+            return <FileText className="size-5 text-warning" />
         case "new_match":
-            return <CheckCircle2 className="size-5 text-green-500" />
         case "cv_processed":
-            return <CheckCircle2 className="size-5 text-green-500" />
-        case "cv_failed":
-            return <XCircle className="size-5 text-red-500" />
-        case "new_contact_message":
-            return <Mail className="size-5 text-purple-500" />
         case "support_ticket_resolved":
-            return <MessageSquare className="size-5 text-green-500" />
+            return <CheckCircle2 className="size-5 text-success" />
+        case "cv_failed":
+            return <XCircle className="size-5 text-destructive" />
+        case "new_contact_message":
+            return <Mail className="size-5 text-accent" />
         case "system":
-            return <AlertCircle className="size-5 text-amber-500" />
+            return <AlertCircle className="size-5 text-warning" />
         default:
             return <Bell className="size-5 text-muted-foreground" />
     }

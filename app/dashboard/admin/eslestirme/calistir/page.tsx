@@ -103,12 +103,12 @@ export default function RunMatchingPage() {
           {result && (
             <div className="space-y-4">
               <div
-                className={`flex items-start gap-3 p-4 rounded-lg ${result.success ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"}`}
+                className={`flex items-start gap-3 p-4 rounded-lg ${result.success ? "bg-success/10 border border-success/20" : "bg-destructive/10 border border-destructive/20"}`}
               >
                 {result.success ? (
                   <CheckCircle className="size-5 text-green-600 dark:text-green-400 shrink-0 mt-0.5" />
                 ) : (
-                  <AlertCircle className="size-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+                  <AlertCircle className="size-5 text-destructive shrink-0 mt-0.5" />
                 )}
                 <div>
                   <p className="font-medium text-sm mb-1">Eşleştirme başarıyla tamamlandı!</p>

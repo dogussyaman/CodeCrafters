@@ -79,7 +79,7 @@ export function HeroSection() {
                         size="lg"
                         variant="outline"
                         asChild
-                        className="text-base border-border/50 hover:border-primary/50 bg-background/50 backdrop-blur-sm dark:bg-zinc-900/50 dark:border-zinc-600 hover:bg-zinc-900/50 transition-all duration-300"
+                        className="text-base border-border hover:border-primary/50 bg-background/50 backdrop-blur-sm hover:bg-card/50 transition-all duration-300"
                     >
                         <Link href="#ozellikler">Özellikleri Keşfet</Link>
                     </Button>

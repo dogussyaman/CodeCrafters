@@ -22,7 +22,7 @@ export function AdminDetailStats({
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-base">
                         <UserCheck className="size-5" />
@@ -41,7 +41,7 @@ export function AdminDetailStats({
                 </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-base">
                         <TrendingUp className="size-5" />
@@ -60,7 +60,7 @@ export function AdminDetailStats({
                 </CardContent>
             </Card>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-base">
                         <Briefcase className="size-5" />

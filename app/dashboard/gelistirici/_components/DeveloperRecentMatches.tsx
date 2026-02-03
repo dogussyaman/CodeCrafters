@@ -16,9 +16,9 @@ export function DeveloperRecentMatches({ cvCount, recentMatches }: DeveloperRece
     return (
         <div className="lg:col-span-2 space-y-6">
             {!hasCv && (
-                <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-6">
-                    <div className="p-4 bg-amber-500/20 rounded-full shrink-0">
-                        <Upload className="size-8 text-amber-600 dark:text-amber-500" />
+                <div className="bg-warning/10 border border-warning/20 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-6">
+                    <div className="p-4 bg-warning/20 rounded-full shrink-0">
+                        <Upload className="size-8 text-warning" />
                     </div>
                     <div className="flex-1 text-center sm:text-left">
                         <h3 className="font-semibold text-lg text-foreground mb-1">Henüz CV Yüklemediniz</h3>
@@ -26,7 +26,7 @@ export function DeveloperRecentMatches({ cvCount, recentMatches }: DeveloperRece
                             Size en uygun iş ilanlarını bulabilmemiz için CV&apos;nizi yükleyerek profilinizi oluşturun.
                         </p>
                     </div>
-                    <Button asChild className="bg-amber-600 hover:bg-amber-700 text-white border-none shrink-0">
+                    <Button asChild variant="default" className="shrink-0">
                         <Link href="/dashboard/gelistirici/cv">
                             <Upload className="mr-2 size-4" />
                             CV Yükle
@@ -47,7 +47,7 @@ export function DeveloperRecentMatches({ cvCount, recentMatches }: DeveloperRece
                 </Button>
             </div>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800 shadow-sm overflow-hidden">
+            <Card className="shadow-sm overflow-hidden">
                 <CardContent className="p-0">
                     {!recentMatches || recentMatches.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16 text-center px-4">

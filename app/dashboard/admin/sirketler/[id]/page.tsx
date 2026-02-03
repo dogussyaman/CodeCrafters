@@ -78,7 +78,7 @@ export default function AdminCompanyDetailPage({ params }: { params: Promise<{ i
                 </Button>
             </div>
 
-            <Card className="bg-card border-border/50 dark:bg-zinc-900/50 dark:border-zinc-800">
+            <Card className="bg-card border-border">
                 <CardHeader>
                     <div className="flex items-start justify-between">
                         <div className="flex items-center gap-4">
@@ -88,7 +88,7 @@ export default function AdminCompanyDetailPage({ params }: { params: Promise<{ i
                             <div>
                                 <CardTitle className="text-2xl">{company.name}</CardTitle>
                                 <CardDescription className="mt-1 flex flex-wrap items-center gap-2">
-                                    <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
+                                    <Badge variant="success">
                                         Aktif
                                     </Badge>
                                     {company.plan && (
@@ -163,7 +163,7 @@ export default function AdminCompanyDetailPage({ params }: { params: Promise<{ i
                     </div>
 
                     {/* Timestamps */}
-                    <div className="pt-4 border-t border-border/50 dark:border-zinc-800">
+                    <div className="pt-4 border-t border-border">
                         <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
                             {company.created_at && (
                                 <div>

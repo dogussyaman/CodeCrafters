@@ -258,7 +258,7 @@ export default function CreateJobPage() {
       </div>
 
       {atJobLimit && (
-        <div className="mb-6 flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-800 dark:text-amber-200">
+        <div className="mb-6 flex items-start gap-2 rounded-lg border border-warning/30 bg-warning/10 p-4 text-sm text-warning-foreground">
           <AlertCircle className="size-5 shrink-0 mt-0.5" />
           <div>
             <p className="font-medium">İlan limitine ulaştınız</p>

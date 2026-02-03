@@ -156,8 +156,8 @@ export function ResetPasswordForm() {
         return (
             <AuthSplitLayout title="Şifre Sıfırlandı" subtitle="Şifreniz başarıyla güncellendi">
                 <div className="space-y-4">
-                    <div className="flex flex-col items-center justify-center space-y-4 p-6 bg-green-500/10 rounded-lg border border-green-500/20">
-                        <CheckCircle2 className="size-12 text-green-500" />
+                    <div className="flex flex-col items-center justify-center space-y-4 p-6 bg-success/10 rounded-lg border border-success/20">
+                        <CheckCircle2 className="size-12 text-success" />
                         <div className="text-center space-y-2">
                             <h3 className="font-semibold text-lg">Başarılı!</h3>
                             <p className="text-sm text-muted-foreground">

@@ -20,7 +20,7 @@ export function Logo({ className, showText = true, href = "/" }: LogoProps) {
                 viewBox="0 0 32 32"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="block text-indigo-600 dark:text-indigo-400 shrink-0"
+                className="block text-primary shrink-0"
             >
                 <path
                     d="M6 28L14 6"

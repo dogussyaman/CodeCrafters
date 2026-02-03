@@ -9,6 +9,7 @@ import { Mail, Calendar, Shield } from "lucide-react"
 import { useEffect, useState } from "react"
 import { UserCardSkeleton } from "@/components/skeleton-loaders"
 import { useToast } from "@/hooks/use-toast"
+import { ROLE_BADGE_MAP } from "@/lib/status-variants"
 
 interface Profile {
   id: string
@@ -58,14 +59,8 @@ export default function UsersPage() {
   }
 
   const getRoleBadge = (role: string) => {
-    const roleConfig: Record<string, { label: string; className: string }> = {
-      developer: { label: "Geliştirici", className: "bg-blue-500/10 text-blue-700 dark:text-blue-400" },
-      hr: { label: "İK Uzmanı", className: "bg-green-500/10 text-green-700 dark:text-green-400" },
-      admin: { label: "Yönetici", className: "bg-purple-500/10 text-purple-700 dark:text-purple-400" },
-    }
-
-    const config = roleConfig[role] || { label: role, className: "" }
-    return <Badge className={config.className}>{config.label}</Badge>
+    const config = ROLE_BADGE_MAP[role] || { label: role, variant: "outline" as const }
+    return <Badge variant={config.variant}>{config.label}</Badge>
   }
 
   const getInitials = (name: string) => {

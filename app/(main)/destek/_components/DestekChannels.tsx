@@ -53,7 +53,7 @@ export function DestekChannels() {
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
                   <MessageCircle className="h-8 w-8 text-primary" />
-                  <Badge className="bg-green-500">Çevrimiçi</Badge>
+                  <Badge variant="success">Çevrimiçi</Badge>
                 </div>
                 <CardTitle>Canlı Destek</CardTitle>
                 <CardDescription>Anında yardım alın</CardDescription>

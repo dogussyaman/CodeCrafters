@@ -1,10 +1,10 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ProjectForm } from "../_components/ProjectForm"
+import { ProjectForm } from "@/app/dashboard/gelistirici/projelerim/_components/ProjectForm"
 import { Code2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-export default function YeniProjePage() {
+export default function AdminYeniProjePage() {
   return (
     <div className="flex flex-1 min-h-0 flex-col rounded-xl border border-border/50 bg-background shadow-sm md:flex-row md:overflow-hidden">
       {/* Sol: dekoratif alan - gradient + görsel */}
@@ -47,9 +47,9 @@ export default function YeniProjePage() {
         <div className="flex flex-1 flex-col p-6 md:p-8 lg:p-10">
           <div className="mx-auto w-full max-w-lg">
             <Button variant="ghost" size="sm" className="-ml-2 mb-4" asChild>
-              <Link href="/dashboard/gelistirici/projelerim">← Projelerime dön</Link>
+              <Link href="/dashboard/admin/projeler">← Projelere dön</Link>
             </Button>
-            <ProjectForm mode="create" noCard />
+            <ProjectForm mode="create" noCard redirectBasePath="/dashboard/admin/projeler" />
           </div>
         </div>
       </div>

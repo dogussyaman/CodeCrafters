@@ -337,7 +337,7 @@ export function JobApplyModal({ jobId, jobTitle, isOpen, onClose }: JobApplyModa
                                         onCheckedChange={(checked) => setSaveAsTemplate(checked as boolean)}
                                     />
                                     <Label htmlFor="save-template" className="text-sm font-normal cursor-pointer flex items-center gap-1">
-                                        <Sparkles className="size-3 text-yellow-500" />
+                                        <Sparkles className="size-3 text-warning" />
                                         Bu yazıyı şablon olarak kaydet
                                     </Label>
                                 </div>

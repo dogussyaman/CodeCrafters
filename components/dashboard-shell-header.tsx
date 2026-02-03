@@ -1,9 +1,10 @@
 "use client"
 
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import { LogOut } from "lucide-react"
+import { Home, LogOut } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationDropdown } from "@/components/notifications/notification-dropdown"
 import { createClient } from "@/lib/supabase/client"
@@ -35,6 +36,12 @@ export function DashboardShellHeader({ profile }: DashboardShellHeaderProps) {
     <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4 lg:px-6">
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mx-2 h-4" />
+      <Button variant="ghost" size="sm" asChild className="gap-1.5">
+        <Link href="/">
+          <Home className="size-4" />
+          <span className="hidden sm:inline">Ana Sayfa</span>
+        </Link>
+      </Button>
       <div className="flex flex-1 items-center justify-end gap-2">
         <NotificationDropdown userId={profile.id} dashboardPath={dashboardPath} />
         <Button type="button" variant="ghost" size="sm" onClick={handleSignOut}>
