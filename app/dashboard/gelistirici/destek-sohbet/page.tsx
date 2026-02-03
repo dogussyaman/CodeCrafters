@@ -12,14 +12,8 @@ export default async function GelistiriciDestekSohbetPage() {
 
   return (
     <div className="container mx-auto flex max-w-6xl flex-1 flex-col min-h-0 px-4 py-6 animate-in fade-in duration-300">
-      <div className="flex shrink-0 items-center gap-2">
-        <MessageCircle className="size-6 text-primary" />
-        <h1 className="text-2xl font-bold">Canlı Destek Sohbeti</h1>
-      </div>
-      <p className="mb-2 shrink-0 text-sm text-muted-foreground">
-        Destek ekibimizle anlık sohbet edebilirsiniz. Mesajlarınız canlı iletilir.
-      </p>
-      <div className="min-h-0 flex-1 overflow-hidden">
+      {/* Sabit max yükseklik: chat alanı büyümez, scroll container içinde kayar */}
+      <div className="flex min-h-[320px] max-h-[calc(100vh-8rem)] flex-1 flex-col overflow-hidden">
         <ChatPanel userId={user.id} />
       </div>
     </div>

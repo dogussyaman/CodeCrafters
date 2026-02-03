@@ -1,6 +1,5 @@
 "use client"
 
-import { useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import type { ChatMessage } from "@/lib/types"
@@ -11,24 +10,11 @@ interface ChatMessageListProps {
   messages: ChatMessage[]
   currentUserId: string
   loading?: boolean
+  /** Scroll container parent'ta; sadece içerik render edilir (scroll sorununu önlemek için) */
+  contentOnly?: boolean
 }
 
-export function ChatMessageList({ messages, currentUserId, loading }: ChatMessageListProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const prevLastIdRef = useRef<string | null>(null)
-
-  useEffect(() => {
-    const lastId = messages.length > 0 ? messages[messages.length - 1].id : null
-    if (lastId != null && lastId !== prevLastIdRef.current) {
-      const el = scrollContainerRef.current
-      if (el) {
-        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" })
-      }
-      prevLastIdRef.current = lastId
-    }
-    if (lastId == null) prevLastIdRef.current = null
-  }, [messages])
-
+export function ChatMessageList({ messages, currentUserId, loading, contentOnly }: ChatMessageListProps) {
   if (loading) {
     return (
       <div className="flex flex-1 items-center justify-center p-4">
@@ -56,13 +42,9 @@ export function ChatMessageList({ messages, currentUserId, loading }: ChatMessag
     )
   }
 
-  return (
-    <div
-      ref={scrollContainerRef}
-      className="h-full min-h-0 flex-1 overflow-y-auto overflow-x-hidden"
-    >
-      <div className="flex flex-col gap-4 p-4">
-        {messages.map((m) => {
+  const content = (
+    <div className={cn("flex flex-col gap-4 p-4", !contentOnly && "h-full min-h-0 flex-1")}>
+      {messages.map((m) => {
           const isOwn = m.sender_id === currentUserId
           return (
             <div
@@ -114,7 +96,7 @@ export function ChatMessageList({ messages, currentUserId, loading }: ChatMessag
             </div>
           )
         })}
-      </div>
     </div>
   )
+  return content
 }
