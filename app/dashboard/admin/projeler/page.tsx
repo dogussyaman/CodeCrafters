@@ -7,6 +7,7 @@ import { Plus, Pencil, Trash2, ExternalLink, Code2 } from "lucide-react"
 import { redirect } from "next/navigation"
 import { ProjectDeleteButton } from "@/app/dashboard/gelistirici/projelerim/_components/ProjectDeleteButton"
 import { JoinRequestsList } from "@/app/dashboard/gelistirici/projelerim/_components/JoinRequestsList"
+import Image from "next/image"
 
 export default async function AdminProjelerPage() {
   const supabase = await createServerClient()
@@ -17,7 +18,7 @@ export default async function AdminProjelerPage() {
 
   const { data: projeler } = await supabase
     .from("projects")
-    .select("id, title, description, status, category, github_url, demo_url, technologies, stars, created_at")
+    .select("id, title, description, status, category, image_url, github_url, demo_url, technologies, stars, created_at")
     .eq("created_by", user.id)
     .order("updated_at", { ascending: false })
 
@@ -25,10 +26,10 @@ export default async function AdminProjelerPage() {
   const { data: joinRequests } =
     projectIds.length > 0
       ? await supabase
-          .from("project_join_requests")
-          .select("id, project_id, user_id, message, created_at, projects(title), profiles(full_name)")
-          .in("project_id", projectIds)
-          .eq("status", "pending")
+        .from("project_join_requests")
+        .select("id, project_id, user_id, message, created_at, projects(title), profiles(full_name)")
+        .in("project_id", projectIds)
+        .eq("status", "pending")
       : { data: [] }
 
   return (
@@ -64,7 +65,7 @@ export default async function AdminProjelerPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 ">
           {projeler.map((proje) => {
             const teknolojiler = Array.isArray(proje.technologies)
               ? proje.technologies
@@ -72,8 +73,22 @@ export default async function AdminProjelerPage() {
                 ? JSON.parse(proje.technologies || "[]")
                 : []
             return (
-              <Card key={proje.id}>
-                <CardHeader className="flex flex-row items-start justify-between gap-2">
+              <Card key={proje.id} className="group hover:shadow-lg transition-all duration-300 hover:border-primary/50 pt-0 border-none">
+                 <div className="relative aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
+                    {proje.image_url ? (
+                      <Image
+                        src={proje.image_url}
+                        alt={proje.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Code2 className="size-12 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                <CardHeader className="flex flex-row items-start justify-between gap-2 pt-0"> 
                   <div className="min-w-0 flex-1">
                     <CardTitle className="truncate">{proje.title}</CardTitle>
                     <CardDescription className="line-clamp-2 mt-1">{proje.description}</CardDescription>

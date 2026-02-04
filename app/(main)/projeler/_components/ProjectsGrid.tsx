@@ -1,8 +1,9 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader,CardTitle } from "@/components/ui/card"
 import { Eye, Github, Heart } from "lucide-react"
+import Image from "next/image"
 
 interface ProjectsGridProps {
     projeler: any[] | null
@@ -22,8 +23,16 @@ export function ProjectsGrid({ projeler }: ProjectsGridProps) {
                             return (
                                 <Card
                                     key={proje.id}
-                                    className="group hover:shadow-lg transition-all duration-300 hover:border-primary/50"
+                                    className="group hover:shadow-lg transition-all duration-300 hover:border-primary/50 pt-0" 
                                 >
+                                    <div className="relative aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
+                                        <Image
+                                            src={proje.image_url}
+                                            alt={proje.title}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
                                     <CardHeader>
                                         <CardTitle className="group-hover:text-primary transition-colors">
                                             <Link href={`/projeler/${proje.id}`}>{proje.title}</Link>

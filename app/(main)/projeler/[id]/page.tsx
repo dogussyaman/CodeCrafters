@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Github, ExternalLink, Heart, Eye, ArrowLeft, Code2, Users } from "lucide-react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import { createServerClient } from "@/lib/supabase/server"
 import { ProjectLikeButton } from "./_components/ProjectLikeButton"
 import { ProjectJoinRequestButton } from "./_components/ProjectJoinRequestButton"
@@ -187,9 +189,11 @@ export default async function ProjeDetayPage({ params }: { params: Promise<{ id:
             <div className="space-y-8">
               <div>
                 <h2 className="text-2xl font-bold mb-4">Proje Detayları</h2>
-                <p className="text-muted-foreground whitespace-pre-line">
-                  {proje.long_description || proje.description}
-                </p>
+                <div className="text-muted-foreground prose prose-sm dark:prose-invert max-w-none">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {proje.long_description || proje.description}
+                  </ReactMarkdown>
+                </div>
               </div>
 
               <div>

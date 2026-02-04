@@ -10,6 +10,7 @@ import {
   Bell,
   Ticket,
   MessageCircle,
+  Settings,
 } from "lucide-react"
 import {
   Sidebar,
@@ -24,6 +25,7 @@ import { cn } from "@/lib/utils"
 
 const menuItems = [
   { title: "Panel", href: "/dashboard/company", icon: Home },
+  { title: "Şirket Bilgileri", href: "/dashboard/company/ayarlar", icon: Settings },
   { title: "Çalışanlar", href: "/dashboard/company/calisanlar", icon: Users },
   { title: "İş İlanları", href: "/dashboard/company/ilanlar", icon: Briefcase },
   { title: "Eşleşmeler", href: "/dashboard/company/eslesmeler", icon: Star },
@@ -34,9 +36,10 @@ const menuItems = [
 
 interface CompanySidebarProps {
   profile?: { full_name?: string; email?: string } | null
+  company?: { id: string; name: string | null; logo_url: string | null } | null
 }
 
-export function CompanySidebar({ profile }: CompanySidebarProps) {
+export function CompanySidebar({ profile, company }: CompanySidebarProps) {
   const pathname = usePathname()
 
   return (
@@ -45,9 +48,18 @@ export function CompanySidebar({ profile }: CompanySidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/dashboard/company">
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold text-base">CodeCrafters</span>
+              <Link href="/dashboard/company" className="flex items-center gap-3">
+                {company?.logo_url ? (
+                  <img
+                    src={company.logo_url}
+                    alt=""
+                    className="size-9 shrink-0 rounded-lg object-contain border border-sidebar-border bg-sidebar-accent"
+                  />
+                ) : null}
+                <div className="grid flex-1 text-left text-sm leading-tight min-w-0">
+                  <span className="truncate font-semibold text-base">
+                    {company?.name || "CodeCrafters"}
+                  </span>
                   <span className="truncate text-xs text-muted-foreground">Şirket</span>
                 </div>
               </Link>

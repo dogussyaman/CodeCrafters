@@ -9,9 +9,10 @@ function getPanelHref(role: string): string {
 
 interface DashboardFooterProps {
   role: string
+  company?: { id: string; name: string | null; logo_url: string | null } | null
 }
 
-export function DashboardFooter({ role }: DashboardFooterProps) {
+export function DashboardFooter({ role, company }: DashboardFooterProps) {
   const currentYear = new Date().getFullYear()
   const panelHref = getPanelHref(role)
 
@@ -19,11 +20,30 @@ export function DashboardFooter({ role }: DashboardFooterProps) {
     <footer className="mt-auto shrink-0 border-t bg-card text-card-foreground">
       <div className="mx-auto max-w-7xl px-4 py-6 md:px-6">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <div className="text-center sm:text-left">
-            <p className="text-sm font-medium">CodeCrafters</p>
-            <p className="text-xs text-muted-foreground">
-              İş ilanları ve eşleştirme platformu
-            </p>
+          <div className="flex items-center gap-3 text-center sm:text-left">
+            {company?.logo_url ? (
+              <Link href="/dashboard/company" className="shrink-0">
+                <img
+                  src={company.logo_url}
+                  alt=""
+                  className="size-8 rounded object-contain border bg-muted"
+                />
+              </Link>
+            ) : null}
+            <div>
+              <p className="text-sm font-medium">
+                {company?.name ? (
+                  <Link href="/dashboard/company" className="hover:underline">
+                    {company.name}
+                  </Link>
+                ) : (
+                  "CodeCrafters"
+                )}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                İş ilanları ve eşleştirme platformu
+              </p>
+            </div>
           </div>
           <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-sm">
             <Link

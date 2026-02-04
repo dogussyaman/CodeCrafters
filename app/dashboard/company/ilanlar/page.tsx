@@ -17,6 +17,15 @@ export default async function CompanyJobsPage() {
 
   const { data: profile } = await supabase.from("profiles").select("company_id").eq("id", user.id).single()
 
+  const { data: company } = await supabase
+    .from("companies")
+    .select("subscription_status")
+    .eq("id", profile?.company_id ?? "")
+    .single()
+
+  const subscriptionStatus = company?.subscription_status as string | null
+  const canCreateJob = subscriptionStatus === "active"
+
   const { data: jobs } = await supabase
     .from("job_postings")
     .select(
@@ -44,12 +53,24 @@ export default async function CompanyJobsPage() {
           <h1 className="text-3xl font-bold text-foreground mb-2">İş İlanları</h1>
           <p className="text-muted-foreground">Şirketiniz için ilanlar oluşturun ve yönetin</p>
         </div>
-        <Button asChild>
-          <Link href="/dashboard/company/ilanlar/olustur">
-            <Plus className="mr-2 size-4" />
-            Yeni İlan
-          </Link>
-        </Button>
+        {canCreateJob ? (
+          <Button asChild>
+            <Link href="/dashboard/company/ilanlar/olustur">
+              <Plus className="mr-2 size-4" />
+              Yeni İlan
+            </Link>
+          </Button>
+        ) : (
+          <div className="flex flex-col items-end gap-2">
+            <Button disabled>
+              <Plus className="mr-2 size-4" />
+              Yeni İlan
+            </Button>
+            <p className="text-xs text-muted-foreground max-w-xs text-right">
+              İlan oluşturmak için aboneliğinizin aktif olması gerekir. Lütfen şirket panelinden ödemeyi tamamlayın.
+            </p>
+          </div>
+        )}
       </div>
 
       {!jobs || jobs.length === 0 ? (
@@ -60,12 +81,19 @@ export default async function CompanyJobsPage() {
             <p className="text-muted-foreground text-center mb-6 max-w-md">
               İlk iş ilanınızı oluşturarak aday aramaya başlayın
             </p>
-            <Button asChild>
-              <Link href="/dashboard/company/ilanlar/olustur">
+            {canCreateJob ? (
+              <Button asChild>
+                <Link href="/dashboard/company/ilanlar/olustur">
+                  <Plus className="mr-2 size-4" />
+                  İlk İlanı Oluştur
+                </Link>
+              </Button>
+            ) : (
+              <Button disabled>
                 <Plus className="mr-2 size-4" />
-                İlk İlanı Oluştur
-              </Link>
-            </Button>
+                Abonelik Bekleniyor
+              </Button>
+            )}
           </CardContent>
         </Card>
       ) : (

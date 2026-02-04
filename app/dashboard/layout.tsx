@@ -41,6 +41,17 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
   const role = getRole(profile as Profile)
 
+  let company: { id: string; name: string | null; logo_url: string | null; plan?: string | null } | null = null
+  const profileWithCompany = profile as Profile & { company_id?: string }
+  if ((role === "company_admin" || role === "hr") && profileWithCompany.company_id) {
+    const { data: companyRow } = await supabase
+      .from("companies")
+      .select("id, name, logo_url, plan")
+      .eq("id", profileWithCompany.company_id)
+      .single()
+    company = companyRow ?? null
+  }
+
   const cookieStore = await cookies()
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
 
@@ -55,9 +66,17 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <SidebarComponent profile={profile as Profile} />
+      {role === "company_admin" ? (
+        <CompanySidebar profile={profile as Profile} company={company} />
+      ) : (
+        <SidebarComponent profile={profile as Profile} />
+      )}
       <SidebarInset className="flex min-h-screen flex-col">
-        <DashboardShellHeader profile={profile as Profile} />
+        <DashboardShellHeader
+          profile={profile as Profile}
+          company={company}
+          plan={company?.plan ?? undefined}
+        />
         <main className="min-h-screen flex-1 flex flex-col p-4 md:p-6">
           <Suspense fallback={null}>
             <DashboardProjeYetkinizToast />
@@ -66,7 +85,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             <div className="flex-1 flex flex-col min-h-0">{children}</div>
           </DashboardSegmentGuard>
         </main>
-        <DashboardFooter role={role} />
+        <DashboardFooter role={role} company={company} />
       </SidebarInset>
     </SidebarProvider>
   )

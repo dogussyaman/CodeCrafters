@@ -1,4 +1,15 @@
+import type { ReactNode } from "react"
 import { createClient } from "@/lib/supabase/server"
+import { SubscriptionCard } from "@/components/company/SubscriptionCard"
+import type { SubscriptionStatus } from "@/lib/types"
+import Link from "next/link"
+
+const SUBSCRIPTION_BADGE: Record<SubscriptionStatus, string> = {
+  pending_payment: "Ödeme Bekleniyor",
+  active: "Aktif",
+  past_due: "Ödeme Gecikmiş",
+  cancelled: "İptal",
+}
 
 export default async function CompanyDashboardPage() {
   const supabase = await createClient()
@@ -20,7 +31,7 @@ export default async function CompanyDashboardPage() {
 
   const { data: company } = await supabase
     .from("companies")
-    .select("id, name, description, location, website, industry, employee_count, plan")
+    .select("id, name, description, location, website, industry, employee_count, logo_url, plan, subscription_status, billing_period, current_plan_price, last_payment_at, subscription_ends_at, contact_email, phone, address, legal_title, tax_number, tax_office")
     .eq("id", profile?.company_id)
     .single()
 
@@ -42,82 +53,191 @@ export default async function CompanyDashboardPage() {
     .select("*", { count: "exact", head: true })
     .in("job_id", jobIds.length > 0 ? jobIds : [""])
 
+  const companyWithExtras = company as typeof company & {
+    contact_email?: string | null
+    phone?: string | null
+    address?: string | null
+    legal_title?: string | null
+    tax_number?: string | null
+    tax_office?: string | null
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8 min-h-screen">
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <h1 className="text-3xl font-bold">
-            {company?.name ?? "Şirket Paneli"}
-          </h1>
-          {company?.plan && (
-            <span className="rounded-full border bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
-              {company.plan === "free" && "Free"}
-              {company.plan === "orta" && "Orta"}
-              {company.plan === "premium" && "Premium"}
-            </span>
-          )}
+    <div className="container mx-auto px-4 py-8 space-y-8 min-h-screen max-w-5xl">
+      {/* Profil hero: logo + isim + aksiyon */}
+      <div className="rounded-2xl border bg-card overflow-hidden">
+        <div className="bg-muted/40 px-6 py-8 md:px-8 md:py-10">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+            <div className="shrink-0">
+              {company?.logo_url ? (
+                <img
+                  src={company.logo_url}
+                  alt=""
+                  className="size-24 md:size-28 rounded-xl object-contain border-2 border-border bg-background shadow-sm"
+                />
+              ) : (
+                <div className="size-24 md:size-28 rounded-xl border-2 border-dashed border-muted-foreground/30 bg-muted/50 flex items-center justify-center">
+                  <span className="text-3xl text-muted-foreground font-light">?</span>
+                </div>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+                {company?.name ?? "Şirket Paneli"}
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                Şirketinizin ilanlarını ve başvurularını buradan yönetebilirsiniz.
+              </p>
+              <div className="flex flex-wrap items-center gap-2 mt-4">
+                {company?.plan && (
+                  <span className="rounded-full border bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
+                    {company.plan === "free" && "Free"}
+                    {company.plan === "orta" && "Orta"}
+                    {company.plan === "premium" && "Premium"}
+                  </span>
+                )}
+                {company?.subscription_status && (
+                  <span
+                    className={`rounded-full border px-3 py-1 text-sm font-medium ${
+                      company.subscription_status === "active"
+                        ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"
+                        : company.subscription_status === "pending_payment"
+                          ? "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400"
+                          : company.subscription_status === "past_due"
+                            ? "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400"
+                            : "border-muted bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {SUBSCRIPTION_BADGE[company.subscription_status]}
+                  </span>
+                )}
+              </div>
+              <div className="mt-4">
+                <Link
+                  href="/dashboard/company/ayarlar"
+                  className="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  Şirket bilgilerini düzenle
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
-        <p className="text-muted-foreground">
-          Şirketinizin ilanlarını ve başvurularını buradan yönetebilirsiniz.
-        </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="rounded-xl border bg-card p-6 flex flex-col gap-2">
+      {company && (
+        <SubscriptionCard
+          companyId={company.id}
+          plan={company.plan ?? "free"}
+          subscriptionStatus={company.subscription_status ?? "pending_payment"}
+          billingPeriod={company.billing_period ?? "monthly"}
+          lastPaymentAt={company.last_payment_at}
+          subscriptionEndsAt={company.subscription_ends_at}
+          currentPlanPrice={company.current_plan_price}
+        />
+      )}
+
+      {/* İstatistikler */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border bg-card p-5 flex flex-col gap-1">
           <p className="text-sm font-medium text-muted-foreground">Toplam İlan</p>
-          <p className="text-3xl font-semibold">{jobCount ?? 0}</p>
+          <p className="text-2xl font-semibold">{jobCount ?? 0}</p>
         </div>
-
-        <div className="rounded-xl border bg-card p-6 flex flex-col gap-2">
+        <div className="rounded-xl border bg-card p-5 flex flex-col gap-1">
           <p className="text-sm font-medium text-muted-foreground">Toplam Başvuru</p>
-          <p className="text-3xl font-semibold">{applicationCount ?? 0}</p>
+          <p className="text-2xl font-semibold">{applicationCount ?? 0}</p>
         </div>
+        <div className="rounded-xl border bg-card p-5 flex flex-col gap-1">
+          <p className="text-sm font-medium text-muted-foreground">Çalışan Sayısı</p>
+          <p className="text-2xl font-semibold">{company?.employee_count || "-"}</p>
+        </div>
+      </div>
 
-        <div className="rounded-xl border bg-card p-6 flex flex-col gap-2">
-          <p className="text-sm font-medium text-muted-foreground">Çalışan Sayısı (profil)</p>
-          <p className="text-3xl font-semibold">
-            {company?.employee_count ? company.employee_count : "-"}
-          </p>
+      {/* Tüm şirket bilgileri */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="rounded-xl border bg-card p-6 space-y-4">
+          <h2 className="text-lg font-semibold">Genel Bilgiler</h2>
+          <dl className="space-y-2 text-sm">
+            <InfoRow label="Sektör" value={company?.industry} />
+            <InfoRow label="Konum" value={company?.location} />
+            <InfoRow
+              label="Website"
+              value={company?.website}
+              href={company?.website ? company.website : undefined}
+            />
+            <InfoRow label="Çalışan sayısı" value={company?.employee_count} />
+          </dl>
+        </div>
+        <div className="rounded-xl border bg-card p-6 space-y-4">
+          <h2 className="text-lg font-semibold">İletişim</h2>
+          <dl className="space-y-2 text-sm">
+            <InfoRow label="E-posta" value={companyWithExtras?.contact_email} />
+            <InfoRow label="Telefon" value={companyWithExtras?.phone} />
+            <InfoRow label="Adres" value={companyWithExtras?.address} />
+          </dl>
         </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-xl border bg-card p-6 space-y-3">
-          <h2 className="text-lg font-semibold">Şirket Bilgileri</h2>
-          <div className="space-y-1 text-sm text-muted-foreground">
-            <p>
-              <span className="font-medium text-foreground">Sektör: </span>
-              {company?.industry || "-"}
-            </p>
-            <p>
-              <span className="font-medium text-foreground">Konum: </span>
-              {company?.location || "-"}
-            </p>
-            <p>
-              <span className="font-medium text-foreground">Website: </span>
-              {company?.website ? (
-                <a
-                  href={company.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary underline-offset-2 hover:underline"
-                >
-                  {company.website}
-                </a>
-              ) : (
-                "-"
-              )}
-            </p>
-          </div>
+        <div className="rounded-xl border bg-card p-6 space-y-4">
+          <h2 className="text-lg font-semibold">Resmî Bilgiler</h2>
+          <dl className="space-y-2 text-sm">
+            <InfoRow label="Ticari unvan" value={companyWithExtras?.legal_title} />
+            <InfoRow label="Vergi numarası" value={companyWithExtras?.tax_number} />
+            <InfoRow label="Vergi dairesi" value={companyWithExtras?.tax_office} />
+          </dl>
         </div>
-
-        <div className="rounded-xl border bg-card p-6 space-y-3">
+        <div className="rounded-xl border bg-card p-6 space-y-4">
           <h2 className="text-lg font-semibold">Açıklama</h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground whitespace-pre-wrap">
             {company?.description || "Şirket açıklaması henüz eklenmemiş."}
           </p>
         </div>
       </div>
+    </div>
+  )
+}
+
+function InfoRow({
+  label,
+  value,
+  href,
+}: {
+  label: string
+  value?: string | null
+  href?: string
+}) {
+  if (value == null || value === "") return <InfoRowRaw label={label} value="—" />
+  if (href)
+    return (
+      <InfoRowRaw
+        label={label}
+        value={
+          <a
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline-offset-2 hover:underline"
+          >
+            {value}
+          </a>
+        }
+      />
+    )
+  return <InfoRowRaw label={label} value={value} />
+}
+
+function InfoRowRaw({
+  label,
+  value,
+}: {
+  label: string
+  value: ReactNode
+}) {
+  return (
+    <div className="flex gap-2">
+      <dt className="font-medium text-foreground shrink-0">{label}:</dt>
+      <dd className="text-muted-foreground min-w-0">{value}</dd>
     </div>
   )
 }

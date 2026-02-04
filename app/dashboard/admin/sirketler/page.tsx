@@ -15,14 +15,31 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/client"
-import type { Company } from "@/lib/types"
+import type { Company, SubscriptionStatus } from "@/lib/types"
 import Link from "next/link"
 import { TableRowSkeleton } from "@/components/skeleton-loaders"
+
+const SUBSCRIPTION_LABELS: Record<SubscriptionStatus, string> = {
+  pending_payment: "Ödeme Bekleniyor",
+  active: "Aktif",
+  past_due: "Gecikmiş",
+  cancelled: "İptal",
+}
+
+function formatDate(iso: string | null | undefined): string {
+  if (!iso) return "-"
+  try {
+    return new Date(iso).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" })
+  } catch {
+    return "-"
+  }
+}
 
 export default function AdminCompaniesPage() {
     const [companies, setCompanies] = useState<Company[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState("")
+    const [statusFilter, setStatusFilter] = useState<"all" | SubscriptionStatus>("all")
     const supabase = createClient()
 
     useEffect(() => {
@@ -45,10 +62,14 @@ export default function AdminCompaniesPage() {
         }
     }
 
-    const filteredCompanies = companies.filter((company) =>
-        company.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        company.industry?.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    const filteredCompanies = companies
+        .filter((company) =>
+            company.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            company.industry?.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        .filter((company) =>
+            statusFilter === "all" ? true : company.subscription_status === statusFilter
+        )
 
     return (
         <div className="container mx-auto p-6 min-h-screen">
@@ -81,7 +102,7 @@ export default function AdminCompaniesPage() {
                 </CardHeader>
                 <CardContent>
                     {/* Search */}
-                    <div className="mb-6">
+                    <div className="mb-6 space-y-3">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                             <Input
@@ -90,6 +111,30 @@ export default function AdminCompaniesPage() {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="pl-10"
                             />
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-xs text-muted-foreground mr-1">Filtre:</span>
+                            <Button
+                                size="sm"
+                                variant={statusFilter === "all" ? "default" : "outline"}
+                                onClick={() => setStatusFilter("all")}
+                            >
+                                Tümü
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant={statusFilter === "active" ? "default" : "outline"}
+                                onClick={() => setStatusFilter("active")}
+                            >
+                                Aktif abonelik
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant={statusFilter === "pending_payment" ? "default" : "outline"}
+                                onClick={() => setStatusFilter("pending_payment")}
+                            >
+                                Ödeme bekleyenler
+                            </Button>
                         </div>
                     </div>
 
@@ -104,13 +149,14 @@ export default function AdminCompaniesPage() {
                                         <TableHead>Çalışan Sayısı</TableHead>
                                         <TableHead>Konum</TableHead>
                                         <TableHead>Plan</TableHead>
-                                        <TableHead>Durum</TableHead>
+                                        <TableHead>Abonelik</TableHead>
+                                        <TableHead>Son Ödeme</TableHead>
                                         <TableHead className="text-right">İşlemler</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {Array.from({ length: 5 }).map((_, i) => (
-                                        <TableRowSkeleton key={i} columns={7} />
+                                        <TableRowSkeleton key={i} columns={8} />
                                     ))}
                                 </TableBody>
                             </Table>
@@ -132,7 +178,8 @@ export default function AdminCompaniesPage() {
                                         <TableHead>Çalışan Sayısı</TableHead>
                                         <TableHead>Konum</TableHead>
                                         <TableHead>Plan</TableHead>
-                                        <TableHead>Durum</TableHead>
+                                        <TableHead>Abonelik</TableHead>
+                                        <TableHead>Son Ödeme</TableHead>
                                         <TableHead className="text-right">İşlemler</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -153,9 +200,26 @@ export default function AdminCompaniesPage() {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                <Badge variant="success">
-                                                    Aktif
-                                                </Badge>
+                                                {company.subscription_status ? (
+                                                    <Badge
+                                                        variant={
+                                                            company.subscription_status === "active"
+                                                                ? "success"
+                                                                : company.subscription_status === "pending_payment"
+                                                                  ? "warning"
+                                                                  : company.subscription_status === "past_due"
+                                                                    ? "destructive"
+                                                                    : "secondary"
+                                                        }
+                                                    >
+                                                        {SUBSCRIPTION_LABELS[company.subscription_status]}
+                                                    </Badge>
+                                                ) : (
+                                                    "-"
+                                                )}
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground text-sm">
+                                                {formatDate(company.last_payment_at)}
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex items-center justify-end gap-2">

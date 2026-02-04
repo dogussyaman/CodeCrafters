@@ -32,6 +32,14 @@ export interface Profile {
 
 export type CompanyPlan = "free" | "orta" | "premium"
 
+export type SubscriptionStatus =
+  | "pending_payment"
+  | "active"
+  | "past_due"
+  | "cancelled"
+
+export type BillingPeriod = "monthly" | "annually"
+
 export interface Company {
   id: string
   name: string
@@ -42,6 +50,12 @@ export interface Company {
   location?: string
   employee_count?: string
   plan?: CompanyPlan
+  subscription_status?: SubscriptionStatus
+  billing_period?: BillingPeriod
+  current_plan_price?: number
+  subscription_started_at?: string
+  subscription_ends_at?: string
+  last_payment_at?: string
   created_by: string
   created_at: string
   updated_at: string

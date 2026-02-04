@@ -38,7 +38,7 @@ export function DesktopNav({
     >
       {showPill && (
         <motion.li
-          className="pointer-events-none absolute inset-y-0 my-1.5 rounded-full bg-muted shadow-sm dark:bg-white/15 dark:shadow-primary/10"
+          className="pointer-events-none absolute inset-y-0 my-1.5 rounded-full bg-gray-300 shadow-sm dark:bg-white/40 dark:shadow-primary/10"
           aria-hidden
           initial={false}
           animate={{ left: pill.left, width: pill.width }}

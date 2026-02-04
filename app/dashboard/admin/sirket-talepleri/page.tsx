@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Building2, Plus, ArrowRight } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { tr } from "date-fns/locale"
+import { RequestReviewButtons } from "./request-review-buttons"
 
 const statusLabels: Record<string, string> = {
   pending: "Beklemede",
@@ -57,7 +58,7 @@ export default async function AdminSirketTalepleriPage() {
           Şirket Talepleri
         </h1>
         <p className="text-muted-foreground mt-2">
-          Kullanıcıların şirket kayıt talepleri. Onaylanan talepler için &quot;Şirket oluştur&quot; ile yeni şirket ekleyebilirsiniz.
+          Kullanıcıların şirket kayıt talepleri. Beklemedeki talepleri <strong>Onayla</strong> / <strong>Reddet</strong> ile değerlendirin; onaylanan talepler için &quot;Şirket oluştur&quot; ile yeni şirket ekleyebilirsiniz.
         </p>
       </div>
 
@@ -98,9 +99,10 @@ export default async function AdminSirketTalepleriPage() {
                       {r.plan === "orta" ? "Orta" : r.plan === "premium" ? "Premium" : "Free"}
                     </Badge>
                   )}
-                  <Badge variant={r.status === "pending" ? "default" : "secondary"}>
+                  <Badge variant={r.status === "pending" ? "default" : r.status === "approved" ? "default" : "secondary"}>
                     {statusLabels[r.status] ?? r.status}
                   </Badge>
+                  {r.status === "pending" && <RequestReviewButtons requestId={r.id} />}
                   {r.status === "approved" && !r.created_company_id && (
                     <Button size="sm" asChild>
                       <Link href={`/dashboard/admin/sirketler/olustur?from_request=${r.id}`}>

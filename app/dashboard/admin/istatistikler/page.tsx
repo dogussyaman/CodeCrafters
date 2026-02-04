@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BarChart3, TrendingUp, Users, Briefcase } from "lucide-react"
+import { BarChart3, TrendingUp, Users, Briefcase, Banknote } from "lucide-react"
 
 export default async function StatisticsPage() {
   const supabase = await createClient()
@@ -31,6 +31,17 @@ export default async function StatisticsPage() {
 
   const { count: matches } = await supabase.from("matches").select("*", { count: "exact", head: true })
   const { count: applications } = await supabase.from("applications").select("*", { count: "exact", head: true })
+
+  const { count: activeSubscriptions } = await supabase
+    .from("companies")
+    .select("*", { count: "exact", head: true })
+    .eq("subscription_status", "active")
+
+  const { data: successPayments } = await supabase
+    .from("company_payments")
+    .select("amount")
+    .eq("status", "success")
+  const totalRevenue = successPayments?.reduce((sum, p) => sum + Number(p.amount ?? 0), 0) ?? 0
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8 min-h-screen">
@@ -67,6 +78,31 @@ export default async function StatisticsPage() {
               <div className="text-xs text-muted-foreground">
                 %{totalUsers ? Math.round(((hrUsers || 0) / totalUsers) * 100) : 0}
               </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Abonelik ve Gelir */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Banknote className="size-5" />
+            Abonelik ve Gelir
+          </CardTitle>
+          <CardDescription>Toplam abonelik geliri ve aktif abonelikli şirket sayısı</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-1">
+              <div className="text-2xl font-bold text-foreground">
+                {totalRevenue.toLocaleString("tr-TR")} ₺
+              </div>
+              <div className="text-sm text-muted-foreground">Toplam Abonelik Geliri</div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-2xl font-bold text-foreground">{activeSubscriptions ?? 0}</div>
+              <div className="text-sm text-muted-foreground">Aktif Abonelikli Şirket</div>
             </div>
           </div>
         </CardContent>

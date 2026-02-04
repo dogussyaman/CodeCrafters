@@ -42,6 +42,7 @@ export default function CompanyCreateJobPage() {
   const [companyId, setCompanyId] = useState<string | null>(null)
   const [companyPlan, setCompanyPlan] = useState<CompanyPlan | null>(null)
   const [activeJobCount, setActiveJobCount] = useState<number>(0)
+  const [subscriptionStatus, setSubscriptionStatus] = useState<string | null>(null)
   const [localeContent, setLocaleContent] = useState<Record<LocaleKey, ReturnType<typeof defaultLocaleContent>>>({
     tr: defaultLocaleContent(),
     en: defaultLocaleContent(),
@@ -86,11 +87,12 @@ export default function CompanyCreateJobPage() {
 
       const { data: company } = await supabase
         .from("companies")
-        .select("plan")
+        .select("plan, subscription_status")
         .eq("id", profile.company_id)
         .single()
 
       setCompanyPlan((company?.plan as CompanyPlan) || "free")
+      setSubscriptionStatus(company?.subscription_status ?? "pending_payment")
 
       const { count } = await supabase
         .from("job_postings")
@@ -105,6 +107,7 @@ export default function CompanyCreateJobPage() {
 
   const planLimit = companyPlan && companyPlan !== "premium" ? JOB_LIMITS[companyPlan] : null
   const atJobLimit = planLimit != null && activeJobCount >= planLimit
+  const subscriptionInactive = subscriptionStatus !== null && subscriptionStatus !== "active"
 
   const updateLocale = (locale: LocaleKey, updater: (prev: ReturnType<typeof defaultLocaleContent>) => ReturnType<typeof defaultLocaleContent>) => {
     setLocaleContent((prev) => ({ ...prev, [locale]: updater(prev[locale]) }))
@@ -121,7 +124,7 @@ export default function CompanyCreateJobPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (atJobLimit) return
+    if (atJobLimit || subscriptionInactive) return
     const tr = localeContent.tr
     if (!tr.title.trim()) {
       setError("Türkçe pozisyon adı zorunludur.")
@@ -142,6 +145,9 @@ export default function CompanyCreateJobPage() {
 
       if (!user) throw new Error("Kullanıcı bulunamadı")
       if (!companyId) throw new Error("Bu kullanıcıya bağlı bir şirket bulunamadı")
+      if (subscriptionInactive) {
+        throw new Error("Aboneliğiniz aktif değildir. İlan oluşturmak için önce ödemeyi tamamlayın.")
+      }
       if (atJobLimit)
         throw new Error(
           `İlan limitine ulaştınız (${companyPlan === "free" ? "Free" : "Orta"} plan: ${planLimit} ilan). Plan yükseltmek için fiyatlandırma sayfamızı inceleyin.`
@@ -230,6 +236,19 @@ export default function CompanyCreateJobPage() {
           ← Geri Dön
         </Link>
       </div>
+
+      {subscriptionInactive && (
+        <div className="mb-6 flex items-start gap-2 rounded-lg border border-warning/30 bg-warning/10 p-4 text-sm text-warning-foreground">
+          <AlertCircle className="size-5 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-medium">Abonelik gerekli</p>
+            <p className="mt-1 text-muted-foreground">
+              İlan oluşturmak için aboneliğinizin aktif olması gerekir. Lütfen şirket panelinde ödeme adımını
+              tamamlayın.
+            </p>
+          </div>
+        </div>
+      )}
 
       {atJobLimit && (
         <div className="mb-6 flex items-start gap-2 rounded-lg border border-warning/30 bg-warning/10 p-4 text-sm text-warning-foreground">
@@ -588,8 +607,14 @@ export default function CompanyCreateJobPage() {
             )}
 
             <div className="flex gap-3 pt-4">
-              <Button type="submit" disabled={loading || atJobLimit} className="flex-1">
-                {loading ? "Oluşturuluyor..." : atJobLimit ? "İlan limitine ulaştınız" : "İlanı Oluştur"}
+              <Button type="submit" disabled={loading || atJobLimit || subscriptionInactive} className="flex-1">
+                {loading
+                  ? "Oluşturuluyor..."
+                  : subscriptionInactive
+                    ? "Abonelik Gerekli"
+                    : atJobLimit
+                      ? "İlan limitine ulaştınız"
+                      : "İlanı Oluştur"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/dashboard/company/ilanlar">İptal</Link>
