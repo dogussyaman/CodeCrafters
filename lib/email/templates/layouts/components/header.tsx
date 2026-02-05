@@ -7,7 +7,7 @@ import { EMAIL_COLORS, EMAIL_SIZES } from '../../../constants';
 export function EmailHeader() {
     const logoUrl = process.env.NEXT_PUBLIC_SITE_URL
         ? `${process.env.NEXT_PUBLIC_SITE_URL}/logo.png`
-        : 'https://codecraftx.com/logo.png';
+        : 'https://www.codecraftx.xyz/logo.png';
 
     return (
         <tr>

@@ -67,14 +67,14 @@ export default function EmailTestPage() {
                             onClick={() => setEmail('team@notificationscodecrafters.xyz')}
                             className="rounded border px-2 py-1 text-xs hover:bg-accent"
                         >
-                            team@notificationscodecrafters.xyz
+                            team@codecraftx.xyz
                         </button>
                         <button
                             type="button"
                             onClick={() => setEmail('support@notificationscodecrafters.xyz')}
                             className="rounded border px-2 py-1 text-xs hover:bg-accent"
                         >
-                            support@notificationscodecrafters.xyz
+                            support@codecraftx.xyz
                         </button>
                     </div>
                 </div>

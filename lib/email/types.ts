@@ -38,6 +38,8 @@ export interface WelcomeEmailProps {
     email: string;
     role: 'developer' | 'employer' | 'hr';
     profileUrl: string;
+    /** Site base URL for blog/projeler links; falls back to profileUrl origin if omitted */
+    siteUrl?: string;
 }
 
 export interface PasswordResetEmailProps {

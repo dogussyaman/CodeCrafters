@@ -25,7 +25,8 @@ export async function sendTestEmailAction(type: string, recipientEmail: string) 
                     name: 'Test Kullanıcısı',
                     email: recipientEmail,
                     role: 'developer' as const,
-                    profileUrl: 'https://codecraftx.com/dashboard/gelistirici/profil',
+                    profileUrl: 'https://www.codecraftx.xyz/dashboard/gelistirici/profil',
+                    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.codecraftx.xyz',
                 };
                 result = await sendEmail({
                     to: recipientEmail,
@@ -41,13 +42,13 @@ export async function sendTestEmailAction(type: string, recipientEmail: string) 
                     developerEmail: recipientEmail,
                     jobTitle: 'Senior React Developer',
                     companyName: 'TechCorp A.Ş.',
-                    companyLogo: 'https://codecraftx.com/uploads/companies/techcorp-logo.png',
+                    companyLogo: 'https://www.codecraftx.xyz/uploads/companies/techcorp-logo.png',
                     matchScore: 92,
                     jobDescription: 'Remote çalışma modeli ile React, TypeScript ve Next.js teknolojilerinde deneyimli...',
                     jobLocation: 'İstanbul (Remote)',
                     jobType: 'remote' as const,
                     salary: '60.000 - 80.000 TL',
-                    jobUrl: 'https://codecraftx.com/is-ilanlari/senior-react-developer-123',
+                    jobUrl: 'https://www.codecraftx.xyz/is-ilanlari/senior-react-developer-123',
                 };
                 result = await sendEmail({
                     to: recipientEmail,
@@ -63,7 +64,7 @@ export async function sendTestEmailAction(type: string, recipientEmail: string) 
                     jobTitle: 'Senior React Developer',
                     companyName: 'TechCorp A.Ş.',
                     appliedAt: new Date().toLocaleString('tr-TR'),
-                    applicationUrl: 'https://codecraftx.com/dashboard/gelistirici/basvurular/123',
+                    applicationUrl: 'https://www.codecraftx.xyz/dashboard/gelistirici/basvurular/123',
                 };
                 result = await sendEmail({
                     to: recipientEmail,

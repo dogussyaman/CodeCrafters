@@ -22,7 +22,7 @@ export async function sendWelcomeEmailExample() {
         name: 'Ahmet Yılmaz',
         email: 'ahmet@example.com',
         role: 'developer' as const,
-        profileUrl: 'https://codecraftx.com/dashboard/gelistirici/profil',
+        profileUrl: 'https://www.codecraftx.xyz/dashboard/gelistirici/profil',
     };
 
     const html = renderEmailTemplate(<WelcomeEmail {...props} />);
@@ -48,14 +48,14 @@ export async function sendNewMatchExample() {
         developerEmail: 'ahmet@example.com',
         jobTitle: 'Senior React Developer',
         companyName: 'TechCorp A.Ş.',
-        companyLogo: 'https://codecraftx.com/uploads/companies/techcorp-logo.png',
+        companyLogo: 'https://www.codecraftx.xyz/uploads/companies/techcorp-logo.png',
         matchScore: 92,
         jobDescription:
             'Remote çalışma modeli ile React, TypeScript ve Next.js teknolojilerinde deneyimli...',
         jobLocation: 'İstanbul (Remote)',
         jobType: 'remote' as const,
         salary: '60.000 - 80.000 TL',
-        jobUrl: 'https://codecraftx.com/is-ilanlari/senior-react-developer-123',
+        jobUrl: 'https://www.codecraftx.xyz/is-ilanlari/senior-react-developer-123',
     };
 
     const html = renderEmailTemplate(<NewMatchEmail {...props} />);
@@ -82,7 +82,7 @@ export async function sendApplicationConfirmationExample() {
         jobTitle: 'Senior React Developer',
         companyName: 'TechCorp A.Ş.',
         appliedAt: '5 Şubat 2026, 14:30',
-        applicationUrl: 'https://codecraftx.com/dashboard/gelistirici/basvurular/123',
+        applicationUrl: 'https://www.codecraftx.xyz/dashboard/gelistirici/basvurular/123',
     };
 
     const html = renderEmailTemplate(<ApplicationSubmittedEmail {...props} />);
@@ -138,7 +138,7 @@ export async function handleNewApplicationAction(
         jobTitle: application.job.title,
         companyName: application.job.company.name,
         appliedAt: new Date().toLocaleString('tr-TR'),
-        applicationUrl: `https://codecraftx.com/dashboard/gelistirici/basvurular/${application.id}`,
+        applicationUrl: `https://www.codecraftx.xyz/dashboard/gelistirici/basvurular/${application.id}`,
     };
 
     await sendEmail({
@@ -179,7 +179,7 @@ export async function sendBulkEmailsExample() {
                         name={recipient.name}
                         email={recipient.email}
                         role="developer"
-                        profileUrl="https://codecraftx.com/profile"
+                        profileUrl="https://www.codecraftx.xyz/dashboard/gelistirici/profil"
                     />
                 ),
             })

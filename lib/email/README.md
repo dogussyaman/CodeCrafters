@@ -84,7 +84,7 @@ const emailHtml = renderToStaticMarkup(
   <WelcomeEmail
     name="Ahmet"
     role="developer"
-    profileUrl="https://codecraftx.com/profile"
+    profileUrl="https://www.codecraftx.xyz/dashboard/gelistirici/profil"
   />
 );
 
@@ -132,12 +132,12 @@ export async function notifyNewMatch(matchData: NewMatchEmailProps) {
 RESEND_API_KEY=re_xxxxx
 
 # Email adresleri
-EMAIL_FROM=CodeCraftX <no-reply@codecraftx.com>
-EMAIL_REPLY_TO=destek@codecraftx.com
-EMAIL_ADMIN=admin@codecraftx.com
+EMAIL_FROM=CodeCraftX <no-reply@codecraftx.xyz>
+EMAIL_REPLY_TO=support@codecraftx.xyz
+EMAIL_ADMIN=admin@codecraftx.xyz
 
 # Site URL (email içindeki linkler için)
-NEXT_PUBLIC_SITE_URL=https://codecraftx.com
+NEXT_PUBLIC_SITE_URL=https://www.codecraftx.xyz
 ```
 
 ## 🎨 Template Özellikleri

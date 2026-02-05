@@ -63,7 +63,7 @@ export async function updateCompanyRequestStatus(
 
     const toEmail = requesterProfile?.email
     if (toEmail) {
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://codecraftx.com"
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.codecraftx.xyz"
       await sendCompanyApprovedEmailUsecase(toEmail, {
         companyName: existing.company_name,
         contactName: requesterProfile?.full_name || toEmail,

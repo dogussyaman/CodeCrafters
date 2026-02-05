@@ -163,7 +163,7 @@ export function DestekFaqSection() {
                   <AccordionTrigger className="text-left">API entegrasyonu sunuyor musunuz?</AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">
                     Evet, kurumsal paketlerimizde RESTful API erişimi sunuyoruz. API dokümantasyonumuz için
-                    developers.codecraftx.com adresini ziyaret edebilir veya satış ekibimizle iletişime
+                    www.codecraftx.xyz adresini ziyaret edebilir veya satış ekibimizle iletişime
                     geçebilirsiniz.
                   </AccordionContent>
                 </AccordionItem>

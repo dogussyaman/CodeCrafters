@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
       email,
       role: role ?? 'developer',
       profileUrl: `${siteUrl}/dashboard/gelistirici/profil`,
+      siteUrl,
     });
 
     return NextResponse.json({ success: true });

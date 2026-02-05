@@ -91,8 +91,8 @@ export function PasswordChangedEmail({ name, changedAt }: PasswordChangedEmailPr
                             }}
                         >
                             Eğer bu değişikliği sen yapmadıysan, lütfen derhal{' '}
-                            <a href="mailto:destek@codecraftx.com" style={{ color: EMAIL_COLORS.error }}>
-                                destek@codecraftx.com
+                            <a href="mailto:support@codecraftx.xyz" style={{ color: EMAIL_COLORS.error }}>
+                                support@codecraftx.xyz
                             </a>{' '}
                             adresinden bize ulaş.
                         </p>

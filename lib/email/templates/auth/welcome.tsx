@@ -5,7 +5,8 @@ import { Button } from '../layouts/components/button';
 import { EMAIL_COLORS, EMAIL_SIZES } from '../../constants';
 import type { WelcomeEmailProps } from '../../types';
 
-export function WelcomeEmail({ name, role, profileUrl }: WelcomeEmailProps) {
+export function WelcomeEmail({ name, role, profileUrl, siteUrl: siteUrlProp }: WelcomeEmailProps) {
+    const baseUrl = siteUrlProp ?? (typeof profileUrl === 'string' && profileUrl ? new URL(profileUrl).origin : 'https://www.codecraftx.xyz');
     const roleText = {
         developer: 'Geliştirici',
         employer: 'İşveren',
@@ -66,6 +67,20 @@ export function WelcomeEmail({ name, role, profileUrl }: WelcomeEmailProps) {
 
                     <Button href={profileUrl}>Profili Tamamla</Button>
 
+                    <p
+                        style={{
+                            fontSize: '14px',
+                            lineHeight: '22px',
+                            color: EMAIL_COLORS.text,
+                            margin: '20px 0 0',
+                        }}
+                    >
+                        Blog yazılarımızı inceleyebilir ve topluluk projelerine göz atabilirsin:{' '}
+                        <a href={`${baseUrl}/blog`} style={{ color: EMAIL_COLORS.primary }}>Blog</a>
+                        {' · '}
+                        <a href={`${baseUrl}/projeler`} style={{ color: EMAIL_COLORS.primary }}>Projeler</a>
+                    </p>
+
                     <div
                         style={{
                             backgroundColor: EMAIL_COLORS.background,
@@ -108,10 +123,10 @@ export function WelcomeEmail({ name, role, profileUrl }: WelcomeEmailProps) {
                     >
                         Sorularınız için{' '}
                         <a
-                            href="mailto:destek@codecraftx.com"
+                            href="mailto:support@codecraftx.xyz"
                             style={{ color: EMAIL_COLORS.primary }}
                         >
-                            destek@codecraftx.com
+                            support@codecraftx.xyz
                         </a>{' '}
                         adresinden bize ulaşabilirsin.
                     </p>
