@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@/lib/supabase/server"
 import { getPaymentProvider, PaymentService } from "@/lib/payments"
+import type { CompanyPlan, BillingPeriod } from "@/lib/types"
+
+const VALID_PLANS: CompanyPlan[] = ["free", "orta", "premium"]
+const VALID_BILLING: BillingPeriod[] = ["monthly", "annually"]
 
 export async function POST(request: Request) {
   try {
@@ -20,9 +24,8 @@ export async function POST(request: Request) {
       .eq("id", user.id)
       .single()
 
-    const companyId =
-      (await request.json().then((b) => b?.companyId).catch(() => null)) ??
-      profile?.company_id
+    const body = await request.json().catch(() => ({}))
+    const companyId = body?.companyId ?? profile?.company_id
 
     if (!companyId) {
       return NextResponse.json(
@@ -46,12 +49,25 @@ export async function POST(request: Request) {
       )
     }
 
+    const { data: company } = await supabase
+      .from("companies")
+      .select("plan, billing_period")
+      .eq("id", companyId)
+      .single()
+
+    const plan: CompanyPlan = VALID_PLANS.includes(body?.plan)
+      ? body.plan
+      : (company?.plan as CompanyPlan) || "free"
+    const billingPeriod: BillingPeriod = VALID_BILLING.includes(body?.billingPeriod)
+      ? body.billingPeriod
+      : (company?.billing_period as BillingPeriod) || "monthly"
+
     const provider = getPaymentProvider()
     const service = new PaymentService(provider)
     const result = await service.startPayment({
       companyId,
-      plan: "free",
-      billingPeriod: "monthly",
+      plan,
+      billingPeriod,
     })
 
     if (result.status === "failed") {

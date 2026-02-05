@@ -11,6 +11,7 @@ import {
   Ticket,
   MessageCircle,
   Settings,
+  CreditCard,
 } from "lucide-react"
 import {
   Sidebar,
@@ -26,6 +27,7 @@ import { cn } from "@/lib/utils"
 const menuItems = [
   { title: "Panel", href: "/dashboard/company", icon: Home },
   { title: "Şirket Bilgileri", href: "/dashboard/company/ayarlar", icon: Settings },
+  { title: "Üyelik", href: "/dashboard/company/uyelik", icon: CreditCard },
   { title: "Çalışanlar", href: "/dashboard/company/calisanlar", icon: Users },
   { title: "İş İlanları", href: "/dashboard/company/ilanlar", icon: Briefcase },
   { title: "Eşleşmeler", href: "/dashboard/company/eslesmeler", icon: Star },

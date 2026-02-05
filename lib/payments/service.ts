@@ -35,7 +35,6 @@ export class PaymentService {
   async startPayment(input: StartPaymentInput): Promise<StartPaymentResult> {
     const admin = createAdminClient()
     const currency = input.currency ?? DEFAULT_CURRENCY
-    const amount = getPlanPrice(input.plan, input.billingPeriod)
 
     const { data: company } = await admin
       .from("companies")
@@ -46,7 +45,9 @@ export class PaymentService {
     if (!company) {
       throw new Error("Şirket bulunamadı")
     }
-    if (company.subscription_status === "active") {
+    const plan = (input.plan || (company.plan as CompanyPlan) || "free") as CompanyPlan
+    const isPlanChange = plan !== (company.plan as CompanyPlan)
+    if (company.subscription_status === "active" && !isPlanChange) {
       return {
         paymentId: "",
         status: "success",
@@ -54,9 +55,8 @@ export class PaymentService {
       }
     }
 
-    const plan = (company.plan as CompanyPlan) || input.plan
     const billingPeriod = (input.billingPeriod || "monthly") as BillingPeriod
-    const finalAmount = amount > 0 ? amount : getPlanPrice(plan, billingPeriod)
+    const finalAmount = getPlanPrice(plan, billingPeriod)
 
     const { data: paymentRow, error: insertError } = await admin
       .from("company_payments")
@@ -139,14 +139,24 @@ export class PaymentService {
       throw new Error(payErr?.message ?? "Ödeme güncellenemedi")
     }
 
+    const { data: existingCompany } = await admin
+      .from("companies")
+      .select("subscription_started_at")
+      .eq("id", payment.company_id)
+      .single()
+
+    const subscriptionStartedAt =
+      existingCompany?.subscription_started_at ?? now
+
     const { error: companyErr } = await admin
       .from("companies")
       .update({
+        plan: payment.plan,
         subscription_status: "active",
         billing_period: payment.billing_period,
         current_plan_price: payment.amount,
         last_payment_at: now,
-        subscription_started_at: now,
+        subscription_started_at: subscriptionStartedAt,
         subscription_ends_at: subscriptionEndsAt,
       })
       .eq("id", payment.company_id)

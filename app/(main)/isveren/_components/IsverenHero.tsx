@@ -49,7 +49,7 @@ export function IsverenHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed min-h-12 flex items-center justify-center"
+          className="text-xl md:text-2xl text-muted-foreground mb-6 max-w-3xl mx-auto leading-relaxed min-h-12 flex items-center justify-center"
         >
           <TypewriterEffect
             words={TYPEWRITER_WORDS}
@@ -64,7 +64,7 @@ export function IsverenHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25 }}
-          className="text-lg text-muted-foreground mb-10 text-pretty max-w-2xl mx-auto"
+          className="text-lg text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto"
         >
           CV analizi ve beceri eşleştirme ile ihtiyacınız olan yazılımcıya hızlıca ulaşın
         </motion.p>
@@ -98,7 +98,7 @@ export function IsverenHero() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
+          className="mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto"
         >
           {[
             { value: "%90", label: "Daha Hızlı İşe Alım", icon: Zap },
@@ -107,13 +107,13 @@ export function IsverenHero() {
           ].map((stat, idx) => (
             <Card
               key={idx}
-              className="bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/10"
+              className="bg-card backdrop-blur-sm border-border/50 hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/10"
             >
-              <CardContent className="p-6 text-center">
-                <stat.icon className="size-8 text-primary mx-auto mb-3" />
-                <div className="text-4xl font-bold gradient-text mb-2">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </CardContent>
+<CardContent className="p-4 md:p-6 text-center">
+                                <stat.icon className="size-8 text-primary mx-auto mb-2 md:mb-3" />
+                                <div className="text-3xl md:text-4xl font-bold gradient-text mb-1 md:mb-2">{stat.value}</div>
+                                <div className="text-xs md:text-sm text-muted-foreground">{stat.label}</div>
+                              </CardContent>
             </Card>
           ))}
         </motion.div>

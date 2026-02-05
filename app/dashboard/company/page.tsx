@@ -126,15 +126,24 @@ export default async function CompanyDashboardPage() {
       </div>
 
       {company && (
-        <SubscriptionCard
-          companyId={company.id}
-          plan={company.plan ?? "free"}
-          subscriptionStatus={company.subscription_status ?? "pending_payment"}
-          billingPeriod={company.billing_period ?? "monthly"}
-          lastPaymentAt={company.last_payment_at}
-          subscriptionEndsAt={company.subscription_ends_at}
-          currentPlanPrice={company.current_plan_price}
-        />
+        <div className="space-y-2">
+          <SubscriptionCard
+            companyId={company.id}
+            plan={company.plan ?? "free"}
+            subscriptionStatus={company.subscription_status ?? "pending_payment"}
+            billingPeriod={company.billing_period ?? "monthly"}
+            lastPaymentAt={company.last_payment_at}
+            subscriptionEndsAt={company.subscription_ends_at}
+            currentPlanPrice={company.current_plan_price}
+          />
+          <p className="text-sm text-muted-foreground">
+            Plan değiştirmek veya ödeme geçmişini görüntülemek için{" "}
+            <Link href="/dashboard/company/uyelik" className="text-primary underline-offset-2 hover:underline">
+              Üyelik merkezine git
+            </Link>
+            .
+          </p>
+        </div>
       )}
 
       {/* İstatistikler */}

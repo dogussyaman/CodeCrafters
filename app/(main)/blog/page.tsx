@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { buildPageMetadata, getSiteTitle } from "@/lib/seo"
 import { createServerClient } from "@/lib/supabase/server"
 import { BlogHero } from "./_components/BlogHero"
+import { BlogCTA } from "./_components/BlogCTA"
 import { BlogFeaturedSection } from "./_components/BlogFeaturedSection"
 import { BlogListSearch } from "./_components/BlogListSearch"
 
@@ -47,6 +48,8 @@ export default async function BlogPage() {
         )}
         <BlogListSearch initialPosts={restPosts} commentCounts={commentCounts} />
       </div>
+
+      <BlogCTA />
     </div>
   )
 }
