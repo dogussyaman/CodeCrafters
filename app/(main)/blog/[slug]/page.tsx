@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { createServerClient } from "@/lib/supabase/server"
-import { sanitizeHtml } from "@/lib/sanitize"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ArrowLeft, FileText } from "lucide-react"
+import { ArrowLeft, Eye, FileText, MessageCircle } from "lucide-react"
+import { MdxRenderer } from "@/components/mdx"
 import { BlogCommentForm } from "../_components/BlogCommentForm"
 import { BlogCommentList } from "../_components/BlogCommentList"
+import { BlogLikeButton } from "../_components/BlogLikeButton"
+import { BlogViewTracker } from "../_components/BlogViewTracker"
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -14,7 +16,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const { data: post, error } = await supabase
     .from("blog_posts")
-    .select("id, title, slug, body, cover_image_url, author_id, published_at, created_at, profiles!blog_posts_author_id_fkey(full_name, avatar_url)")
+    .select("id, title, slug, body, cover_image_url, author_id, published_at, created_at, view_count, like_count, profiles!blog_posts_author_id_fkey(full_name, avatar_url)")
     .eq("slug", slug)
     .eq("status", "published")
     .single()
@@ -27,9 +29,26 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .eq("post_id", post.id)
     .order("created_at", { ascending: true })
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  let hasLiked = false
+  if (user) {
+    const { data: likeRow } = await supabase
+      .from("blog_post_likes")
+      .select("id")
+      .eq("post_id", post.id)
+      .eq("user_id", user.id)
+      .maybeSingle()
+    hasLiked = !!likeRow
+  }
+
   const author = (post as { profiles?: { full_name?: string; avatar_url?: string } | null }).profiles
   const authorName = author?.full_name ?? "CodeCrafters"
   const authorAvatar = author?.avatar_url ?? null
+  const viewCount = (post as { view_count?: number }).view_count ?? 0
+  const likeCount = (post as { like_count?: number }).like_count ?? 0
+  const commentCount = comments?.length ?? 0
   const publishedDate = post.published_at
     ? new Date(post.published_at).toLocaleDateString("tr-TR", {
         day: "numeric",
@@ -49,6 +68,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </Button>
 
         <article className="mb-12">
+          <BlogViewTracker postId={post.id} />
           <div className="relative w-full aspect-video max-h-[420px] rounded-xl overflow-hidden bg-muted mb-10">
             {post.cover_image_url ? (
               <img
@@ -66,7 +86,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
               {post.title}
             </h1>
-            <div className="flex items-center gap-4 text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
               <Avatar className="size-12 border-2 border-border">
                 <AvatarImage src={authorAvatar ?? undefined} />
                 <AvatarFallback className="text-base">
@@ -79,14 +99,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   {publishedDate}
                 </time>
               </div>
+              <div className="flex flex-wrap items-center gap-3 border-l border-border pl-4">
+                <span className="flex items-center gap-1.5 text-sm" title="Görüntülenme">
+                  <Eye className="size-4" />
+                  {viewCount}
+                </span>
+                <BlogLikeButton
+                  postId={post.id}
+                  initialLikeCount={likeCount}
+                  initialHasLiked={hasLiked}
+                  className="h-8"
+                />
+                <span className="flex items-center gap-1.5 text-sm" title="Yorum">
+                  <MessageCircle className="size-4" />
+                  {commentCount}
+                </span>
+              </div>
             </div>
           </header>
-          <div
-            className="prose prose-lg prose-neutral dark:prose-invert max-w-none prose-headings:font-bold prose-p:leading-relaxed"
-            dangerouslySetInnerHTML={{
-              __html: sanitizeHtml(post.body.replace(/\n/g, "<br />")),
-            }}
-          />
+          <MdxRenderer content={post.body} />
         </article>
 
         <section className="space-y-6">

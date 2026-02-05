@@ -4,7 +4,7 @@ import { createServerClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, FileText, ExternalLink, BookOpen } from "lucide-react"
+import { Plus, Pencil, FileText, ExternalLink, BookOpen, Eye, Heart, MessageCircle } from "lucide-react"
 import { BlogPostDeleteButton } from "@/app/dashboard/admin/blog/_components/BlogPostDeleteButton"
 
 export default async function YazilarimPage() {
@@ -16,9 +16,20 @@ export default async function YazilarimPage() {
 
   const { data: posts } = await supabase
     .from("blog_posts")
-    .select("id, title, slug, body, status, published_at, created_at, cover_image_url")
+    .select("id, title, slug, body, status, published_at, created_at, cover_image_url, view_count, like_count")
     .eq("author_id", user.id)
     .order("updated_at", { ascending: false })
+
+  const postIds = (posts ?? []).map((p) => p.id)
+  const commentCounts: Record<string, number> = {}
+  if (postIds.length > 0) {
+    const { data: comments } = await supabase
+      .from("blog_comments")
+      .select("post_id")
+      .in("post_id", postIds)
+    for (const id of postIds) commentCounts[id] = 0
+    for (const c of comments ?? []) commentCounts[c.post_id] = (commentCounts[c.post_id] ?? 0) + 1
+  }
 
   return (
     <div className="space-y-8">
@@ -77,6 +88,20 @@ export default async function YazilarimPage() {
                     {excerpt ? (
                       <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{excerpt}</p>
                     ) : null}
+                    <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1" title="Görüntülenme">
+                        <Eye className="size-3.5" />
+                        {(post as { view_count?: number }).view_count ?? 0}
+                      </span>
+                      <span className="flex items-center gap-1" title="Beğeni">
+                        <Heart className="size-3.5" />
+                        {(post as { like_count?: number }).like_count ?? 0}
+                      </span>
+                      <span className="flex items-center gap-1" title="Yorum">
+                        <MessageCircle className="size-3.5" />
+                        {commentCounts[post.id] ?? 0}
+                      </span>
+                    </div>
                   </div>
                   <Badge variant={post.status === "published" ? "default" : "secondary"} className="shrink-0">
                     {post.status === "published" ? "Yayında" : "Taslak"}

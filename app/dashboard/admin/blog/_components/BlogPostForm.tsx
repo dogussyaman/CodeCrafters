@@ -1,15 +1,15 @@
 "use client"
 
-import { useActionState, useEffect } from "react"
+import { useActionState, useEffect, useState } from "react"
 import { useFormStatus } from "react-dom"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Loader2 } from "lucide-react"
+import { RichEditor } from "@/components/ui/rich-editor"
 import { createBlogPost, updateBlogPost, type BlogFormState } from "../actions"
 import { toast } from "sonner"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -56,6 +56,8 @@ export function BlogPostForm({
       : (prev: BlogFormState, fd: FormData) => updateBlogPost(postId!, prev, fd)
 
   const [state, formAction] = useActionState(action, { ok: false })
+  const [body, setBody] = useState(initialValues?.body ?? "")
+  const [status, setStatus] = useState(initialValues?.status ?? "draft")
 
   useEffect(() => {
     if (state.ok) {
@@ -119,29 +121,31 @@ export function BlogPostForm({
             <p className="text-xs text-muted-foreground">İsteğe bağlı. Yazı detayında görünecek kapak görseli.</p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="body">İçerik *</Label>
-            <Textarea
+            <Label htmlFor="body">İçerik * (Markdown)</Label>
+            <RichEditor
               id="body"
-              name="body"
-              placeholder="Yazı içeriği (Markdown veya düz metin)"
-              defaultValue={initialValues?.body}
-              rows={14}
-              required
+              value={body}
+              onChange={setBody}
+              placeholder="Yazı içeriği (Markdown: başlık, liste, **kalın**, kod blokları...)"
+              minHeight="14rem"
+              aria-label="Yazı içeriği"
             />
+            <input type="hidden" name="body" value={body} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="status"></Label>
-            <Select>
-              <SelectTrigger className="w-full max-w-48">
+            <Label htmlFor="status">Durum</Label>
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger id="status" className="w-full max-w-48">
                 <SelectValue placeholder="Durum" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem id="status" value="draft">Taslak</SelectItem>
-                  <SelectItem id="status" value="published">Yayınla</SelectItem>
+                  <SelectItem value="draft">Taslak</SelectItem>
+                  <SelectItem value="published">Yayınla</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
+            <input type="hidden" name="status" value={status} />
           </div>
           <div className="flex gap-2">
             <SubmitButton />
