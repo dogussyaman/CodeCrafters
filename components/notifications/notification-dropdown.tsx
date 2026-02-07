@@ -1,5 +1,6 @@
 "use client"
 
+import { useCallback, useState } from "react"
 import { Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,9 +22,14 @@ interface NotificationDropdownProps {
 
 export function NotificationDropdown({ userId, dashboardPath }: NotificationDropdownProps) {
     const { notifications, unreadCount, loading, markAsRead, markAllAsRead } = useNotifications(userId)
+    const [open, setOpen] = useState(false)
+
+    const handleNavigate = useCallback(() => {
+        setOpen(false)
+    }, [])
 
     return (
-        <DropdownMenu>
+        <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
@@ -69,6 +75,7 @@ export function NotificationDropdown({ userId, dashboardPath }: NotificationDrop
                                     key={notification.id}
                                     notification={notification}
                                     onMarkAsRead={markAsRead}
+                                    onNavigate={handleNavigate}
                                 />
                             ))}
                         </div>
@@ -84,7 +91,7 @@ export function NotificationDropdown({ userId, dashboardPath }: NotificationDrop
                                 asChild
                                 className="w-full justify-center text-sm hover:bg-primary/10 hover:text-primary"
                             >
-                                <Link href={`${dashboardPath}/bildirimler`}>
+                                <Link href={`${dashboardPath}/bildirimler`} onClick={handleNavigate}>
                                     Tüm bildirimleri gör
                                 </Link>
                             </Button>

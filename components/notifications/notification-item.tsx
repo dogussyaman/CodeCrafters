@@ -14,9 +14,10 @@ interface NotificationItemProps {
   onMarkAsRead: (id: string) => void
   /** Verilirse tıklanınca önce detay açılır; verilmezse href varsa doğrudan sayfaya gider */
   onOpenDetail?: (notification: Notification) => void
+  onNavigate?: () => void
 }
 
-export function NotificationItem({ notification, onMarkAsRead, onOpenDetail }: NotificationItemProps) {
+export function NotificationItem({ notification, onMarkAsRead, onOpenDetail, onNavigate }: NotificationItemProps) {
   const isUnread = !notification.read_at
   const { label, icon: Icon } = getNotificationTypeMeta(notification.type)
   const ctaText = notification.href ? getNotificationCtaText(notification.type) : null
@@ -29,6 +30,9 @@ export function NotificationItem({ notification, onMarkAsRead, onOpenDetail }: N
     }
     if (isUnread) {
       onMarkAsRead(notification.id)
+    }
+    if (notification.href) {
+      onNavigate?.()
     }
   }
 
